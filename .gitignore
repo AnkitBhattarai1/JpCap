@@ -1,0 +1,8 @@
+Core/target/
+Core/.settings
+Core/.project
+Core/.classpath
+
+.classpath
+.project
+.settings

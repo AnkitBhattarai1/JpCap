@@ -31,17 +31,20 @@ public class NativeWpcapMapping {
 	public static native void pcap_freealldevs(Pointer alldevsp);
 
 	public static native Pointer pcap_lookupdev(PcapErrbuf errbuf);
-	
+
 	/*
 	 * struct pcap_if{ struct pcap_if* next; char* name; char* description;
 	 * pcap_addr* addresses; bpf_u_int32 flags;
 	 * 
 	 * }
 	 */
-	 /**
-	 *The {@code pcap_if} class represents a network inteface on hte system tha can be used for capturing th epacket
-	 *@author Ankit Bhattarai
-	 *@version 1.0
+
+	/**
+	 * The {@code pcap_if} class represents a network inteface on the system tha can
+	 * be used for capturing th epacket
+	 * 
+	 * @author Ankit Bhattarai
+	 * @version 1.0
 	 * 
 	 */
 	public static class pcap_if extends Structure {
@@ -74,6 +77,7 @@ public class NativeWpcapMapping {
 	 * struct pcap_addr { struct pcap_addr *next; struct sockaddr *addr; struct
 	 * sockaddr *netmask; struct sockaddr *broadaddr; struct sockaddr *dstaddr; };
 	 */
+
 	public static class pcap_addr extends Structure {
 		public pcap_addr.ByReference next;/* pointer that points to the next---struct pcap_addr* next */
 		public soc_addr.ByReference addr; /* address struc---soc_addr* address */
@@ -81,6 +85,7 @@ public class NativeWpcapMapping {
 		public soc_addr.ByReference brodaddr;/* broadcast address for tha taddress */
 		public soc_addr.ByReference dstaddr; /* P2P destination address for that address */
 
+		// noArgs constructor
 		public pcap_addr() {
 		}
 
@@ -98,7 +103,11 @@ public class NativeWpcapMapping {
 		}
 	}
 
-	// represents the socket address....
+	/**
+	 * The {@code soc_addr} class represents the socket address
+	 * 
+	 */
+
 	public static class soc_addr extends Structure {
 
 		public short sa_family; // don't know that is this.....
@@ -124,7 +133,10 @@ public class NativeWpcapMapping {
 			// TODO: Don't know what does this do .....
 			return (!(Platform.isMac() || Platform.isFreeBSD() || Platform.isOpenBSD() || Platform.iskFreeBSD())
 					? sa_family
-					: (ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? (short) (0xFF & sa_family)
+					: (ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN) ? (short) (0xFF & sa_family) // 0XFF making
+																											// it an
+																											// unsigned
+																											// integer
 							: (short) (0xFF & (sa_family >> 8))));
 			// if(!(Platform.isMac()|| Platform.isFreeBSD()|| Platform.isOpenBSD()||
 			// Platform.iskFreeBSD())) return sa_family;

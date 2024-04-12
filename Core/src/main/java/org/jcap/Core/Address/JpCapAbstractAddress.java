@@ -86,58 +86,21 @@ public abstract class JpCapAbstractAddress implements JpCapAddress {
 		this.NetMask = setValidAddress.apply(pcapAddr.netmask, saFamily);
 		this.bordAddress = setValidAddress.apply(pcapAddr.brodaddr, saFamily);
 		this.destAddress = setValidAddress.apply(pcapAddr.dstaddr, saFamily);
-
-		// if (pcapAddr.addr != null && pcapAddr.addr.getFamily() != Inets.AF_UNSPEC) {
-		// if (pcapAddr.addr.getFamily() != saFamily) {
-		// // warn(pcapAddr.addr.getFamily(), saFamily, devName, "addr");
-		// this.address = null;
-		// } else {
-		// this.address = toInetAddress(pcapAddr.addr);
-		// }
-		// } else {
-		// this.address = null;
-		// }
-
-		// if (pcapAddr.netmask != null && pcapAddr.addr.getFamily() != Inets.AF_UNSPEC)
-		// {
-		// if (pcapAddr.addr.getFamily() != saFamily) {
-		// // warn(pcapAddr.addr.getFamily(), saFamily, devName, "addr");
-		// this.NetMask = null;
-		// } else {
-		// this.NetMask = toInetAddress(pcapAddr.addr);
-		// }
-		// } else {
-		// this.NetMask = null;
-		// }
-
-		// if (pcapAddr.brodaddr != null && pcapAddr.addr.getFamily() !=
-		// Inets.AF_UNSPEC) {
-		// if (pcapAddr.addr.getFamily() != saFamily) {
-		// // warn(pcapAddr.addr.getFamily(), saFamily, devName, "addr");
-		// this.bordAddress = null;
-		// } else {
-		// this.bordAddress = toInetAddress(pcapAddr.addr);
-		// }
-		// } else {
-		// this.bordAddress = null;
-		// }
-
-		// // TODO:Renaming dstaddr to destAddress in pcapAddr......
-		// if (pcapAddr.dstaddr != null && pcapAddr.addr.getFamily() != Inets.AF_UNSPEC)
-		// {
-		// if (pcapAddr.addr.getFamily() != saFamily) {
-		// // warn(pcapAddr.addr.getFamily(), saFamily, devName, "addr");
-		// this.destAddress = null;
-		// } else {
-		// this.destAddress = toInetAddress(pcapAddr.addr);
-		// }
-		// } else {
-		// this.destAddress = null;
-		// }
 	}
 
+	    /**
+     * Converts a given {@link soc_addr} to an {@link InetAddress}.
+     * <p>
+     * This method must be implemented by subclasses to define the specific conversion logic
+     * from a native {@link soc_addr} to a Java {@link InetAddress}.
+     * </p>
+     *
+     * @param sa The {@link soc_addr} to be converted.
+     * @return The corresponding {@link InetAddress} if conversion is successful, otherwise {@code null}.
+     */
 	protected abstract InetAddress toInetAddress(soc_addr sa);
 
+	
 	@Override
 	public InetAddress getAddress() {
 		return address;

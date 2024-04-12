@@ -26,7 +26,7 @@ public class InetConverter {
 			return null;
 		try {
 			return (Inet4Address) Inet4Address
-					.getByAddress(ByteOperations.getByteArray(inAddr.S_addr.longValue(), ByteOrder.nativeOrder()));
+					.getByAddress(ByteOperations.getByteArray(inAddr.S_addr.intValue(), ByteOrder.nativeOrder()));
 		} catch (Exception e) {
 			// TODO: handle exception
 			throw new AssertionError(e);

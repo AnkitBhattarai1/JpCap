@@ -25,7 +25,7 @@ public class JpCapNetworkInterface {
 			short sa_family = (pcapAddr != null) ? pcapAddr.addr.getFamily()
 					: (pcapAddr.netmask) != null ? pcapAddr.netmask.getFamily()
 							: pcapAddr.brodaddr != null ? pcapAddr.brodaddr.getFamily()
-									: pcapAddr.dstaddr != null ? pcapAddr.dstaddr.getFamily() : Inets.AF_UNSPEC;
+									: pcapAddr.dstaddr != null ? pcapAddr.dstaddr.getFamily() : /* default value*/Inets.AF_UNSPEC;
 
 			if (sa_family == Inets.AF_INET)
 				addresses.add(new JpCapIPv4Address(pcapAddr, sa_family, name));

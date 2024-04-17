@@ -15,16 +15,17 @@ public interface Packet {
 	public byte[] getRawData();
 
 	public PacketBuilder Builder();
-	
+
 	public static interface PacketBuilder {
 
-		public<T extends PacketBuilder> T get(Class<T> cls);
+		public <T extends PacketBuilder> T get(Class<T> cls);
 
 		public Packet build();
 	}
 
 	public interface Header {
 		public int length();
+
 		public byte[] getRawData();
 	}
 }

@@ -9,5 +9,4 @@ public class Inets {
 	public static final short AF_CHAOS = 5;// mit CHAOS protocols
 	public static final short AF_NS = 6; // XEROX NS protocols
 	public static final short AF_INET6 = 23;
-	
 }

@@ -88,19 +88,20 @@ public abstract class JpCapAbstractAddress implements JpCapAddress {
 		this.destAddress = setValidAddress.apply(pcapAddr.dstaddr, saFamily);
 	}
 
-	    /**
-     * Converts a given {@link soc_addr} to an {@link InetAddress}.
-     * <p>
-     * This method must be implemented by subclasses to define the specific conversion logic
-     * from a native {@link soc_addr} to a Java {@link InetAddress}.
-     * </p>
-     *
-     * @param sa The {@link soc_addr} to be converted.
-     * @return The corresponding {@link InetAddress} if conversion is successful, otherwise {@code null}.
-     */
+	/**
+	 * Converts a given {@link soc_addr} to an {@link InetAddress}.
+	 * <p>
+	 * This method must be implemented by subclasses to define the specific
+	 * conversion logic from a native {@link soc_addr} to a Java
+	 * {@link InetAddress}.
+	 * </p>
+	 *
+	 * @param sa The {@link soc_addr} to be converted.
+	 * @return The corresponding {@link InetAddress} if conversion is successful,
+	 *         otherwise {@code null}.
+	 */
 	protected abstract InetAddress toInetAddress(soc_addr sa);
 
-	
 	@Override
 	public InetAddress getAddress() {
 		return address;

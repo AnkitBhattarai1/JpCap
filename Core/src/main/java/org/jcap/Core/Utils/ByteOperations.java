@@ -175,10 +175,11 @@ public class ByteOperations {
 				(0xFF&arr[offset])
 		);
 
-		else return (int)(((arr[offset]<<BYTE_IN_BITS*3))|
-					((0xFF & arr[offset + 1]) << (BYTE_IN_BITS * 2))|
-					((0xFF & arr[offset + 2]) << (BYTE_IN_BITS * 1))|
-					((0xFF & arr[offset + 3]))
+		else
+		return (int)(((arr[offset]<<BYTE_IN_BITS*3))|
+				((0xFF & arr[offset + 1]) << (BYTE_IN_BITS * 2))|
+				((0xFF & arr[offset + 2]) << (BYTE_IN_BITS * 1))|
+				((0xFF & arr[offset + 3]))
 		);
 
 	}
@@ -199,7 +200,7 @@ public class ByteOperations {
 		if(bo==null) throw new NullPointerException("Byte Order cannot be null");
 
 		if(bo.equals(ByteOrder.LITTLE_ENDIAN))
-		 return (long)(((arr[offset+7] << BYTE_IN_BITS*7)) |
+		 return (long)(((arr[offset+7] << BYTE_IN_BITS*7))		|
 						(0xFF&arr[offset+6] << BYTE_IN_BITS*6)	|
 						(0xFF&arr[offset+5] << BYTE_IN_BITS*5)	|
 						(0xFF&arr[offset+4] << BYTE_IN_BITS*4)	|
@@ -211,7 +212,7 @@ public class ByteOperations {
 		);
 				
 		else  
-		return (long) ((arr[offset]<<BYTE_IN_BITS*7)|
+		return (long) ((arr[offset]<<BYTE_IN_BITS*7)		|
 					(0xFF&arr[offset+1] << BYTE_IN_BITS*6)	|
 					(0xFF&arr[offset+2] << BYTE_IN_BITS*5)	|
 					(0xFF&arr[offset+3] << BYTE_IN_BITS*4)	|
@@ -232,6 +233,7 @@ public class ByteOperations {
      * @throws ArrayIndexOutOfBoundsException if the requested range is outside of the array bounds
      */
 	public static void  validate(byte[] arr, int offset, int len){
+		
 		if(arr==null|arr.length==0) throw new IllegalArgumentException(arr==null?"the array can not be null":"the array can not be empty");
 
 		if(len==0) throw new  IllegalArgumentException("legth is zer0");

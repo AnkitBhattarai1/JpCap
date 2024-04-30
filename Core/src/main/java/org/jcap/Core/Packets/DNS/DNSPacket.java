@@ -218,6 +218,7 @@ public class DNSPacket extends AbstractPacket {
 	 */
 
 	public static final class DNSHeader extends AbstractHeader {
+
 		/*
 		 * 1 1 1 1 1 1
 		 * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
@@ -303,6 +304,8 @@ public class DNSPacket extends AbstractPacket {
 			private short NSCount;
 			private short ARcount;
 
+			private boolean sealed = false;
+
 			private DNSHeaderBuilder(byte[] rawData, int offset, int len) {
 
 				if (len < DNS_MIN_HEADER_SIZE)
@@ -323,6 +326,8 @@ public class DNSPacket extends AbstractPacket {
 				this.ANCount = ByteOperations.getShort(rawData, offset + ANCOUNT_OFFSET);
 				this.NSCount = ByteOperations.getShort(rawData, offset + NSCOUNT_OFFSET);
 				this.ARcount = ByteOperations.getShort(rawData, offset + ARCOUNT_OFFSET);
+
+				this.sealed = true;
 			}
 
 			public DNSHeaderBuilder() {
@@ -338,24 +343,34 @@ public class DNSPacket extends AbstractPacket {
 			}
 
 			public DNSHeaderBuilder Id(short id) {
+				if (sealed)
+					throw new UnsupportedOperationException("The id field cannot be initilaized again");
 				this.Id = id;
 				return this;
 			}
 
 			public DNSHeaderBuilder response(boolean response) {
+				if (sealed)
+					throw new UnsupportedOperationException("The response field cannot be initilaized again");
 				this.response = response;
 				return this;
 			}
 
 			public DNSHeaderBuilder dnsOPCode(DnsOpCode code) {
+				if (sealed)
+					throw new UnsupportedOperationException("The opcode field cannot be initilaized again");
 				this.dnsOpCode = code;
 				return this;
 			}
 
 			public DNSHeaderBuilder authoritativeAnswer(boolean ans) {
+				if (sealed)
+					throw new UnsupportedOperationException(
+							"The authoritativeAnswer field cannot be initilaized again");
 				this.authoritativeAnswer = ans;
 				return this;
 			}
+			// More setters are to be included.......
 		}
 
 		public short getId() {

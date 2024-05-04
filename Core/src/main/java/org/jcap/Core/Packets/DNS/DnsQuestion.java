@@ -26,13 +26,14 @@ public class DnsQuestion {
     }
 
     private static final class DnsQuestionBuilder {
+
         private DnsDomainName questionName;
         private DnsResourceRecordType questionType;
         private DnsClass questionClass;
 
         private boolean sealed = false;
 
-        public DnsQuestionBuilder() {
+        public DnsQuestionBuilder() {// For custom building
         }
 
         public DnsQuestionBuilder(byte[] rawdata, int offset, int len) {
@@ -43,11 +44,11 @@ public class DnsQuestion {
             if (len - cursor != Short.BYTES * 2)
                 throw new IllegalArgumentException("NOt enough data to make a dns Domain Name");
 
-            // this.questionType = new
-            // DnsResourceRecordType.getInstanceOfCode(ByteOperations.getShort(rawdata,
-            // offset + cursor));
+            this.questionType = DnsResourceRecordType.instanceOfCode(ByteOperations.getShort(rawdata,
+                    offset + cursor));
             cursor += Short.BYTES;
             this.questionClass = DnsClass.instanceOfCode(ByteOperations.getShort(rawdata, offset + cursor));
+            this.sealed = true;
         }
 
         public DnsQuestionBuilder questionName(DnsDomainName questionName) {

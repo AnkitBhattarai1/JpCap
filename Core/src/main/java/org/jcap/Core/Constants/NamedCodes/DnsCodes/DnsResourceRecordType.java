@@ -1,5 +1,8 @@
 package org.jcap.Core.Constants.NamedCodes.DnsCodes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jcap.Core.Constants.NamedCodes.NamedCode;
 
 public class DnsResourceRecordType extends NamedCode<Short, DnsResourceRecordType> {
@@ -21,4 +24,17 @@ public class DnsResourceRecordType extends NamedCode<Short, DnsResourceRecordTyp
         throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
     }
 
+    private static final Map<Short, DnsResourceRecordType> registry = new HashMap<>();
+    static {
+        registry.put((short) 1, A);
+    }
+
+    public static DnsResourceRecordType instanceOfCode(short value) {
+
+        if (registry.containsKey(value)) {
+            return registry.get(value);
+        } else {
+            return new DnsResourceRecordType(value, "unknown");
+        }
+    }
 }

@@ -1,25 +1,40 @@
 package org.jcap.Core.Packets.DNS;
 
-import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.nio.ByteOrder;
 
+import org.jcap.Core.Utils.InetConverter;
+
+/*
+ *  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                    ADDRESS                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ */
 public class DnsRDataA implements DnsRData {
 
-    private final InetAddress address;
+    private final Inet4Address address;
 
-    public DnsRDataA() {
-        this.address = null;
+    private boolean addressPlainText;
+
+    private DnsRDataA(DnsRDataABuilder builder) {
+        // TODO Validation is to be done ...
+        this.address = builder.address;
     }
 
     @Override
     public int length() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'length'");
+        if (addressPlainText) {
+            return address.getHostAddress().length();
+        } else {
+            return Integer.BYTES;
+        }
     }
 
     @Override
     public byte[] getRawData() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRawData'");
+        byte[] rawData = new byte[length()];
+        // TODO To be implemented later......
+        return rawData;
     }
 
     @Override
@@ -34,4 +49,54 @@ public class DnsRDataA implements DnsRData {
         throw new UnsupportedOperationException("Unimplemented method 'toString'");
     }
 
+    public static DnsRDataABuilder Builder() {
+        return new DnsRDataABuilder();
+    }
+
+    public static DnsRDataABuilder Builder(byte[] rawData, int offset, int len) {
+        return new DnsRDataABuilder(rawData, offset, len);
+    }
+
+    public static final class DnsRDataABuilder {
+        Inet4Address address;
+        private boolean sealed;
+
+        public DnsRDataABuilder() {
+
+        }
+
+        public DnsRDataABuilder(byte[] rawData, int offset, int len) {
+            if (len < Byte.BYTES * 4)
+                throw new IllegalArgumentException("The data is not sufficient");
+
+            if (len == Byte.BYTES * 4) {
+                this.address = InetConverter.toInet4Address(rawData, offset, ByteOrder.BIG_ENDIAN);
+                // TODO To be continued
+            }
+
+            this.sealed = true;
+        }
+
+        public DnsRDataABuilder address(Inet4Address address) {
+            if (sealed)
+                throw new UnsupportedOperationException("The address cannot be set again ");
+
+            this.address = address;
+            this.sealed = true;
+            return this;
+        }
+
+        public DnsRData build() {
+            validate(this);
+            return new DnsRDataA(this);
+        }
+
+        private void validate(DnsRDataABuilder dnsRDataABuilder) {
+            // TODO Validation is to be done
+        }
+    }
+
+    public Inet4Address getAddress() {
+        return this.address;
+    }
 }

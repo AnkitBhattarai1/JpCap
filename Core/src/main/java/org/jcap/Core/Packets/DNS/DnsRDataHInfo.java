@@ -1,24 +1,59 @@
 package org.jcap.Core.Packets.DNS;
 
+/**
+ * Represents the RDATA section for DNS HINFO records containing information
+ * about
+ * the hardware type and operating system of a host.
+ * <p>
+ * This class provides methods to build an instance from scratch or from raw
+ * byte data,
+ * retrieve properties, and serialize the instance back to raw bytes suitable
+ * for use
+ * in DNS packets.
+ * </p>
+ */
 public class DnsRDataHInfo implements DnsRData {
 
     private final String os;
     private final String cpu;
 
+    /**
+     * Constructs a {@link DnsRDataHInfo} instance using the provided builder.
+     * 
+     * @param builder the {@link DnsRDataHInfoBuilder} to extract properties
+     */
     private DnsRDataHInfo(DnsRDataHInfoBuilder builder) {
         // TODO validation is to be done
         this.cpu = builder.cpu;
         this.os = builder.os;
     }
 
+    /**
+     * Creates a new builder instance for constructing a {@code DnsRDataHInfo}.
+     * 
+     * @return a new {@link DnsRDataHInfoBuilder} instance
+     */
     public static DnsRDataHInfoBuilder Builder() {
         return new DnsRDataHInfoBuilder();
     }
 
+    /**
+     * Creates a new builder instance for constructing a {@code DnsRDataHInfo} from
+     * raw byte data.
+     * 
+     * @param rawData the byte array containing the DNS packet data
+     * @param offset  the starting index of the RDATA in {@code rawData}
+     * @param len     the length of the RDATA
+     * @return a new {@link DnsRDataHInfoBuilder} initialized with data from
+     *         {@code rawData}
+     */
     public static DnsRDataHInfoBuilder Builder(byte[] rawData, int offset, int len) {
         return new DnsRDataHInfoBuilder(rawData, offset, len);
     }
 
+    /**
+     * Inner class to build {@code DnsRDataHInfo} instances.
+     */
     public static final class DnsRDataHInfoBuilder {
 
         private String os;
@@ -26,9 +61,21 @@ public class DnsRDataHInfo implements DnsRData {
 
         private boolean sealed;
 
+        /**
+         * Private constructor for builder initialization.
+         */
         private DnsRDataHInfoBuilder() {
         }
 
+        /**
+         * Constructs a builder by parsing RDATA from raw byte data.
+         * 
+         * @param rawData byte array containing the RDATA
+         * @param offset  the offset in {@code rawData} where RDATA begins
+         * @param len     the length of the RDATA
+         * @throws IllegalArgumentException if data is insufficient to extract required
+         *                                  fields
+         */
         private DnsRDataHInfoBuilder(byte[] rawData, int offset, int len) {
             int position = 0;
             int cpuLen = rawData[offset] & 0xFF;
@@ -51,6 +98,14 @@ public class DnsRDataHInfo implements DnsRData {
             this.sealed = true;
         }
 
+        /**
+         * Sets the operating system information.
+         * 
+         * @param os the operating system description
+         * @return this builder instance
+         * @throws UnsupportedOperationException if the builder is sealed
+         * @throws IllegalArgumentException      if the os length exceeds 255 characters
+         */
         public DnsRDataHInfoBuilder OS(String os) {
             if (sealed)
                 throw new UnsupportedOperationException("Cannot change the field os once  made from byte data");
@@ -60,6 +115,15 @@ public class DnsRDataHInfo implements DnsRData {
             return this;
         }
 
+        /**
+         * Sets the CPU type information.
+         * 
+         * @param cpu the CPU type description
+         * @return this builder instance
+         * @throws UnsupportedOperationException if the builder is sealed
+         * @throws IllegalArgumentException      if the cpu length exceeds 255
+         *                                       characters
+         */
         public DnsRDataHInfoBuilder cpu(String cpu) {
             if (sealed)
                 throw new UnsupportedOperationException("Cannot change the field os once  made from byte data");
@@ -69,6 +133,12 @@ public class DnsRDataHInfo implements DnsRData {
             return this;
         }
 
+        /**
+         * Builds a {@code DnsRDataHInfo} instance based on the properties set in this
+         * builder.
+         * 
+         * @return a new {@code DnsRDataHInfo} instance
+         */
         public DnsRDataHInfo build() {
             // TODO Validation is to be done
             return new DnsRDataHInfo(this);
@@ -149,5 +219,4 @@ public class DnsRDataHInfo implements DnsRData {
             return false;
         return true;
     }
-
 }

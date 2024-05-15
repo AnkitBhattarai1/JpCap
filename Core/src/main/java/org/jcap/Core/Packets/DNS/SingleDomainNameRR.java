@@ -3,9 +3,16 @@ package org.jcap.Core.Packets.DNS;
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsResourceRecordType;
 import org.jcap.Core.Utils.ByteOperations;
 
+/*
+ *    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    /                  DomainName                    /
+    /                                               /
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ */
 public class SingleDomainNameRR implements DnsRData {
 
     private final DnsDomainName domainName;
+
     private final DnsResourceRecordType type;
 
     private SingleDomainNameRR(SingleDomainNameRRBuilder builder) {
@@ -27,8 +34,7 @@ public class SingleDomainNameRR implements DnsRData {
 
     @Override
     public byte[] getRawData() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRawData'");
+        return domainName.getRawData();
     }
 
     @Override

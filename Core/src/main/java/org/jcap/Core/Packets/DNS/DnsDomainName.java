@@ -1,5 +1,7 @@
 package org.jcap.Core.Packets.DNS;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +15,22 @@ import org.jcap.Core.Utils.ByteOperations;
 
 public class DnsDomainName {
 
+    /**
+     * The root domain name.
+     */
+    public static final DnsDomainName ROOT_DOMAIN;
+
+    static {
+        try {
+            ROOT_DOMAIN = DnsDomainName.Builder(new byte[] { 0 }, 0, 1).build();
+        } catch (IllegalArgumentException e) {
+            throw new AssertionError("Never get here.");
+        }
+    }
+
     private final List<String> labels;
     private final String name;
-    private final short pointer;
+    private final Short pointer;
 
     private static final int LABEL_POINTER_FLAG = 0xC0;// 11000000.
     private static final int LABEL_MASK = 0X3F;// 00111111
@@ -43,6 +58,7 @@ public class DnsDomainName {
     }
 
     public static class DnsDomainNameBuilder {
+
         private List<String> labels;
         private Short pointer = null;
         private String name;
@@ -65,6 +81,7 @@ public class DnsDomainName {
              */
             boolean terminated = false;
             Short tempPointer = null;
+
             this.labels = new ArrayList<>();
 
             while (position < len) {
@@ -76,6 +93,8 @@ public class DnsDomainName {
                 }
 
                 if ((lengthoflabel & LABEL_POINTER_FLAG) == LABEL_POINTER_FLAG) {
+                    // if the first two bit is 11 the preceeding 14bits represents the pointer
+                    // value....
                     // offset+position+1>rawdata.length
                     // TODO need to check whether its len-(position+offset)
                     if ((len - position) < Short.BYTES)
@@ -83,7 +102,10 @@ public class DnsDomainName {
                     tempPointer = (short) (ByteOperations.getShort(rawData, offset + position) & (0x3FFF));
                     terminated = true;
                     break;
-                } else if ((lengthoflabel & LABEL_POINTER_FLAG) == 0) {
+                }
+                // if the first two bit is 00 then the remaining 14 bits represents the lenght
+                // of the label in bytes ....
+                else if ((lengthoflabel & LABEL_POINTER_FLAG) == 0) {
                     position++; // gets to the start of the label
                     // TODO need to check whether its len-(position+offset)
                     if (len - position < lengthoflabel)
@@ -102,6 +124,7 @@ public class DnsDomainName {
             if (!terminated) {
                 throw new IllegalArgumentException("No end label found");
             }
+
             this.pointer = tempPointer;
             this.name = String.join(".", labels);
             this.sealed = true;
@@ -112,11 +135,11 @@ public class DnsDomainName {
                 if (s.length() > 63)
                     throw new IllegalArgumentException("The length of a label must not be more than 63");
             }
-
             if (sealed)
                 throw new UnsupportedOperationException("The field labels cannot be initialized again");
             this.labels = Arrays.asList(labels);
             this.name = String.join(".", this.labels);
+
             return this;
         }
 
@@ -137,7 +160,7 @@ public class DnsDomainName {
                 throw new IllegalArgumentException("The pointer must start with '11' ");
             if (sealed)
                 throw new UnsupportedOperationException("The field pointer cannot be initialized again");
-            this.pointer = pointer;
+            this.pointer = (short) (pointer & POINTER_MASK);
             return this;
         }
 
@@ -148,7 +171,6 @@ public class DnsDomainName {
         }
 
         private void validate(DnsDomainNameBuilder dnsDomainNameBuilder) {
-            // TODO Validation is to be implemented
         }
 
     }
@@ -158,12 +180,82 @@ public class DnsDomainName {
         for (String label : labels) {
             len += label.length() + 1;
         }
-        if (pointer != 0) {
+        if (pointer != null) {
             len += 2;
         } else {
             len++;
         }
         return len;
+    }
+
+    public byte[] getRawData() {
+        byte[] data = new byte[length()];
+        int cursor = 0;
+        for (String label : labels) {
+            byte[] labelBytes = label.getBytes();
+            data[cursor] = (byte) labelBytes.length;
+            cursor++;
+            System.arraycopy(labelBytes, 0, data, cursor, labelBytes.length);
+            cursor += labelBytes.length;
+        }
+        if (pointer != null) {
+            byte[] offsetBytes = ByteOperations.getByteArray(pointer);
+            offsetBytes[0] |= 0xC0;
+            System.arraycopy(offsetBytes, 0, data, cursor, offsetBytes.length);
+        }
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        if (labels.size() == 0 && pointer == null) {
+            return "<ROOT>";
+        }
+
+        if (pointer == null) {
+            return name;
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append("[name: ").append(name).append(", pointer: ").append(pointer).append("]");
+            return sb.toString();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((labels == null) ? 0 : labels.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((pointer == null) ? 0 : pointer.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DnsDomainName other = (DnsDomainName) obj;
+        if (labels == null) {
+            if (other.labels != null)
+                return false;
+        } else if (!labels.equals(other.labels))
+            return false;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (pointer == null) {
+            if (other.pointer != null)
+                return false;
+        } else if (!pointer.equals(other.pointer))
+            return false;
+        return true;
     }
 
 }

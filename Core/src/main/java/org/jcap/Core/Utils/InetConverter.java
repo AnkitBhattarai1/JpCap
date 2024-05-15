@@ -2,6 +2,7 @@ package org.jcap.Core.Utils;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.nio.ByteOrder;
 
 import org.jcap.Core.Native.NativeWpcapMapping.in6_addr;
@@ -42,6 +43,37 @@ public class InetConverter {
 
 		} catch (Exception e) {
 			throw new AssertionError(e);
+		}
+	}
+
+	public static Inet4Address toInet4Address(byte[] rawData, int offset, ByteOrder bo) {
+		ByteOperations.validate(rawData, offset, Byte.BYTES * 4);
+
+		try {
+			if (bo == ByteOrder.LITTLE_ENDIAN)
+				return (Inet4Address) InetAddress.getByAddress(ByteOperations.reverse(rawData));
+			else
+				return (Inet4Address) Inet4Address.getByAddress(rawData);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AssertionError(e);
+			// TODO To be done later
+		}
+	}
+
+	public static Inet6Address toInet6Address(byte[] rawData, int offset, ByteOrder bo) {
+		ByteOperations.validate(rawData, offset, Byte.BYTES * 16);
+
+		try {
+			if (bo == ByteOrder.LITTLE_ENDIAN)
+				return (Inet6Address) InetAddress.getByAddress(ByteOperations.reverse(rawData));
+
+			else
+				return (Inet6Address) InetAddress.getByAddress(rawData);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new AssertionError(e);
+			// TODO TO be done later...
 		}
 	}
 

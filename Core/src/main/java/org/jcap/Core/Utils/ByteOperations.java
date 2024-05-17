@@ -270,5 +270,4 @@ public class ByteOperations {
 		if (offset < 0 || len < 0 || offset + len > arr.length)
 			throw new ArrayIndexOutOfBoundsException();
 	}
-
 }

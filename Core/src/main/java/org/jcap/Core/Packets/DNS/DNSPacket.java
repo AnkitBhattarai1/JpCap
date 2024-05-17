@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsOpCode;
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsRCode;
-import org.jcap.Core.Packets.AbstractPacket;
 import org.jcap.Core.Packets.Packet;
 import org.jcap.Core.Utils.ByteOperations;
 
@@ -15,7 +14,7 @@ import org.jcap.Core.Utils.ByteOperations;
  * and additional information. This class extends the AbstractPacket class to
  * provide specific implementations for DNS packet structures.
  */
-public class DNSPacket extends AbstractPacket {
+public class DNSPacket implements Packet {
 
 	/*
 	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
@@ -67,9 +66,21 @@ public class DNSPacket extends AbstractPacket {
 	}
 
 	@Override
-	public byte[] getRawData() {
+	public DNSHeader getHeader() {
 		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getRawData'");
+		throw new UnsupportedOperationException("Unimplemented method 'getHeader'");
+	}
+
+	@Override
+	public Packet getPlayLoad() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getPlayLoad'");
+	}
+
+	@Override
+	public byte[] getRawData() {
+		return null;
+
 	}
 
 	/**
@@ -78,7 +89,7 @@ public class DNSPacket extends AbstractPacket {
 	 * @return A new instance of DNSPacketBuilder.
 	 */
 	@Override
-	public PacketBuilder Builder() {
+	public DNSPacketBuilder Builder() {
 		return new DNSPacketBuilder();
 	}
 
@@ -113,7 +124,7 @@ public class DNSPacket extends AbstractPacket {
 		return new DNSPacketBuilder(rawData, offset, packetLen, headerLen);
 	}
 
-	public static class DNSPacketBuilder extends AbstractPacketBuilder {
+	public static class DNSPacketBuilder implements PacketBuilder {
 
 		private DNSHeader dnsHeader;
 		private List<DnsQuestion> question;
@@ -127,7 +138,7 @@ public class DNSPacket extends AbstractPacket {
 			this.question = new ArrayList<DnsQuestion>((int) (header.QDCount & 0XFFFF));
 			this.answers = new ArrayList<DnsResourceRecord>((int) (header.ANCount & 0xFFFF));
 			this.authority = new ArrayList<DnsResourceRecord>((int) (header.NSCount & 0xFFFF));
-			this.additionalInformation = new ArrayList<DnsResourceRecord>(header.ARcount & 0xFFFF);
+			this.additionalInformation = new ArrayList<DnsResourceRecord>(header.ARCount & 0xFFFF);
 
 		}
 
@@ -219,7 +230,7 @@ public class DNSPacket extends AbstractPacket {
 	 * @see DNSHeaderBuilder for building instances of this class.
 	 */
 
-	public static final class DNSHeader extends AbstractHeader {
+	public static final class DNSHeader implements Header {
 
 		/*
 		 * 1 1 1 1 1 1
@@ -251,7 +262,7 @@ public class DNSPacket extends AbstractPacket {
 		private final short QDCount;
 		private final short ANCount;
 		private final short NSCount;
-		private final short ARcount;
+		private final short ARCount;
 
 		private static final int ID_OFFSET = 0;
 		private static final int ID_SIZE = Short.BYTES;
@@ -280,7 +291,7 @@ public class DNSPacket extends AbstractPacket {
 			this.QDCount = builder.QDCount;
 			this.ANCount = builder.ANCount;
 			this.NSCount = builder.NSCount;
-			this.ARcount = builder.ARcount;
+			this.ARCount = builder.ARcount;
 		}
 
 		public static DNSHeaderBuilder Builder(byte[] arr, int offset, int len) {
@@ -420,7 +431,61 @@ public class DNSPacket extends AbstractPacket {
 		}
 
 		public short getARcount() {
-			return ARcount;
+			return ARCount;
+		}
+
+		@Override
+		public int length() {
+			return DNS_MIN_HEADER_SIZE;
+		}
+
+		@Override
+		public byte[] getRawData() {
+			byte[] rawData = new byte[length()];
+
+			int position = 0;
+			System.arraycopy(ByteOperations.getByteArray(Id), 0, rawData, position,
+					ByteOperations.getByteArray(Id).length);
+			position += Short.BYTES;
+
+			short flag = (short) (dnsOpCode.getValue() << 3);
+
+			if (response)
+				flag |= 0x8000;
+
+			if (authoritativeAnswer)
+				flag |= 0x0400;
+
+			if (truncation)
+				flag |= 0x0200;
+
+			if (recursionDesired)
+				flag |= 0x0100;
+
+			if (recursionAvailable)
+				flag |= 0x0080;
+
+			System.arraycopy(ByteOperations.getByteArray(flag), 0, rawData, position,
+					ByteOperations.getByteArray(flag).length);
+			position += Short.BYTES;
+
+			System.arraycopy(ByteOperations.getByteArray(QDCount), 0, rawData, position,
+					ByteOperations.getByteArray(QDCount).length);
+			position += Short.BYTES;
+
+			System.arraycopy(ByteOperations.getByteArray(ANCount), 0, rawData, position,
+					ByteOperations.getByteArray(ANCount).length);
+			position += Short.BYTES;
+
+			System.arraycopy(ByteOperations.getByteArray(NSCount), 0, rawData, position,
+					ByteOperations.getByteArray(NSCount).length);
+			position += Short.BYTES;
+
+			System.arraycopy(ByteOperations.getByteArray(ARCount), 0, rawData, position,
+					ByteOperations.getByteArray(ARCount).length);
+			position += Short.BYTES;
+
+			return rawData;
 		}
 
 	}

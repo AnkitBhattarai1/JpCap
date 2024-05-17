@@ -1,7 +1,5 @@
 package org.jcap.Core.Packets.DNS;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -16,7 +16,7 @@ import com.sun.jna.ptr.PointerByReference;
  * @author Ankit Bhattarai
  */
 public class NativeWpcapMapping {
-	
+
 	public static final String PCAP_LIB_NAME = System.getProperty(
 			NativeWpcapMapping.class.getPackage().getName() + ".pcapLibName", Platform.isWindows() ? "wpcap" : "pcap");
 
@@ -256,7 +256,8 @@ public class NativeWpcapMapping {
 	public static class in6_addr extends Structure {
 		public byte[] in6_addr = new byte[16];
 
-		public in6_addr() {}
+		public in6_addr() {
+		}
 
 		@Override
 		public List<String> getFieldOrder() {

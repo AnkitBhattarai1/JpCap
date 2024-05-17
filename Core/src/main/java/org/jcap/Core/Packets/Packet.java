@@ -4,6 +4,8 @@ public interface Packet {
 
 	public int length();
 
+	public byte[] getRawData();
+
 	public Header getHeader();
 
 	public Packet getPlayLoad();
@@ -12,18 +14,14 @@ public interface Packet {
 
 	public <T extends Packet> boolean containsPacketOf(Class<T> packetType);
 
-	public byte[] getRawData();
-
 	public PacketBuilder Builder();
 
 	public static interface PacketBuilder {
-
-		public <T extends PacketBuilder> T get(Class<T> cls);
-
 		public Packet build();
 	}
 
-	public interface Header {
+	public static interface Header {
+
 		public int length();
 
 		public byte[] getRawData();

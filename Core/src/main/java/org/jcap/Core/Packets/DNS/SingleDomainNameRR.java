@@ -78,11 +78,18 @@ public class SingleDomainNameRR implements DnsRData {
 
         public SingleDomainNameRRBuilder domainName(DnsDomainName domainName) {
             // TODO validation is to be done for cName;
+            if (sealed)
+                throw new UnsupportedOperationException(
+                        "The field domainName cannot be set once it is assigned with rawData..");
             this.domainName = domainName;
             return this;
         }
 
         public SingleDomainNameRRBuilder type(DnsResourceRecordType type) {
+            if (sealed)
+                throw new UnsupportedOperationException(
+                        "The field type cannot be set once it is assigned with rawData..");
+
             this.type = type;
             return this;
         }

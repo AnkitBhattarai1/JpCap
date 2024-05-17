@@ -54,6 +54,21 @@ import org.jcap.Core.Utils.ByteOperations;
  *                 exported with any RR from this zone.
  * 
  * */
+
+/**
+ * Represents the Start of Authority (SOA) Resource Record (RR) data structure
+ * in the Domain Name System (DNS).
+ * <p>
+ * An SOA record is used by DNS servers to indicate the authoritative name
+ * server for a DNS zone.
+ * It contains administrative information about the zone, such as the primary
+ * name server, the email of the domain administrator,
+ * the serial number that changes when the zone is updated, and timers that
+ * specify how long secondary servers should cache data.
+ * <p>
+ * This class provides methods to build and manipulate SOA RData as well as
+ * validate its components.
+ */
 public class DnsRDataSoa implements DnsRData {
 
     /**
@@ -98,6 +113,16 @@ public class DnsRDataSoa implements DnsRData {
      */
     private final int minimum;
 
+    /**
+     * Constructs a new instance of {@link DnsRDataSoa} with the provided builder.
+     * <p>
+     * This constructor initializes the SOA RData with the components provided by
+     * the builder.
+     * Validation of the components is pending.
+     *
+     * @param builder The builder containing the components to initialize the SOA
+     *                RData.
+     */
     private DnsRDataSoa(DnsRDataSoaBuilder builder) {
         // TODO validation is to be done ....
         this.mName = builder.mName;
@@ -109,14 +134,42 @@ public class DnsRDataSoa implements DnsRData {
         this.minimum = builder.minimum;
     }
 
+    /**
+     * Returns a new instance of {@link DnsRDataSoaBuilder} to start building an SOA
+     * RData.
+     *
+     * @return A new instance of {@link DnsRDataSoaBuilder}.
+     */
     public DnsRDataSoaBuilder Builder() {
         return new DnsRDataSoaBuilder();
     }
 
+    /**
+     * Returns a new instance of {@link DnsRDataSoaBuilder} initialized with raw
+     * data to continue building an SOA RData.
+     *
+     * @param rawData The raw data representing the SOA RData.
+     * @param offset  The starting position in the raw data array.
+     * @param len     The length of the raw data.
+     * @return A new instance of {@link DnsRDataSoaBuilder} initialized with the
+     *         provided raw data.
+     */
     public DnsRDataSoaBuilder Builder(byte[] rawData, int offset, int len) {
         return new DnsRDataSoaBuilder(rawData, offset, len);
     }
 
+    /**
+     * Builder pattern implementation for constructing instances of
+     * {@link DnsRDataSoa}.
+     * <p>
+     * This builder facilitates the construction of SOA RData instances either from
+     * raw data or through individual components.
+     * It enforces validation checks and immutability once the object is
+     * constructed.
+     * <p>
+     * After setting the necessary components, call the {@link #build()} method to
+     * obtain an immutable {@link DnsRDataSoa} object.
+     */
     private static final class DnsRDataSoaBuilder {
 
         private DnsDomainName mName;
@@ -224,6 +277,17 @@ public class DnsRDataSoa implements DnsRData {
             return this;
         }
 
+        /**
+         * Validates the components of the SOA RData being built and constructs a new
+         * immutable {@link DnsRDataSoa} instance.
+         * <p>
+         * This method should be called after setting all required components using the
+         * builder methods.
+         *
+         * @return A new immutable instance of {@link DnsRDataSoa}.
+         * @throws IllegalArgumentException If any of the required components are not
+         *                                  set or fail validation.
+         */
         public DnsRDataSoa build() {
             validate(this);
             return new DnsRDataSoa(this);
@@ -234,12 +298,30 @@ public class DnsRDataSoa implements DnsRData {
         }
     }
 
+    /**
+     * Returns the length of the SOA RData in bytes.
+     * <p>
+     * This method is not implemented.
+     *
+     * @return The length of the SOA RData in bytes.
+     * @throws UnsupportedOperationException Always, as this method is
+     *                                       unimplemented.
+     */
     @Override
     public int length() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'length'");
     }
 
+    /**
+     * Returns the raw data representing the SOA RData.
+     * <p>
+     * This method is not implemented.
+     *
+     * @return The raw data representing the SOA RData.
+     * @throws UnsupportedOperationException Always, as this method is
+     *                                       unimplemented.
+     */
     @Override
     public byte[] getRawData() {
         // TODO Auto-generated method stub

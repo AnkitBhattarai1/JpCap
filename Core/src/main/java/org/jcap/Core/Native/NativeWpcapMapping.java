@@ -4,6 +4,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.jna.Callback;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import com.sun.jna.NativeLong;
@@ -11,6 +12,18 @@ import com.sun.jna.Platform;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.ptr.PointerByReference;
+
+/*
+char => byte
+short => short
+wchar_t => char
+int => int
+long => com.sun.jna.NativeLong
+long long => long
+float => float
+double => double
+char * => String
+*/
 
 /**
  * @author Ankit Bhattarai
@@ -20,6 +33,8 @@ public class NativeWpcapMapping {
 	public static final String PCAP_LIB_NAME = System.getProperty(
 			NativeWpcapMapping.class.getPackage().getName() + ".pcapLibName", Platform.isWindows() ? "wpcap" : "pcap");
 
+			//Native.register() --> When called from a class static initializer, maps
+			// all native methods found within that class to native libraries via the JNA raw calling interface.
 	static {
 		Native.register(NativeWpcapMapping.class, NativeLibrary.getInstance(PCAP_LIB_NAME));
 	}
@@ -32,22 +47,60 @@ public class NativeWpcapMapping {
 	public static native void pcap_freealldevs(Pointer alldevsp);
 
 	public static native Pointer pcap_lookupdev(PcapErrbuf errbuf);
+	//device is the name of the device to open
+	//snaplen is the maximum length of the packets to capture
+	//promisc is the promiscuous mode to open the device in
+	//to_ms is the read timeout in milliseconds
+	//auth is the authentication to open the device in
+	//errbuf is the error buffer
 
-	/*
-	 * struct pcap_if{ struct pcap_if* next; char* name; char* description;
-	 * pcap_addr* addresses; bpf_u_int32 flags;
-	 * 
-	 * }
-	 */
+	public static native Pointer pcap_open_live(String device, int snaplen, int promisc, int to_ms, Pointer auth, PcapErrbuf errbuf);
 
+	// linktype is the link layer type of the device
+	// snaplen is the maximum length of the packets to capture
+	public static native Pointer pcap_open_dead(int linktype, int snaplen);
+
+	// linktype is the link layer type of the device
+	// snaplen is the maximum length of the packets to capture
+	// tstamp_precision is the timestamp precision
+	public static native Pointer pcap_open_dead_with_tstamp_precision(int linktype, int snaplen, int tstamp_precision);
+
+	// fname is the name of the file to open
+	// linktype is the link layer type of the device
+	// snaplen is the maximum length of the packets to capture
+	// tstamp_precision is the timestamp precision
+
+	public static native Pointer pcap_open_offline_with_tstamp_precision(String fname, int tstamp_precision);
+	
+	public static native int pcap_loop(Pointer p, int cnt, pcap_handler callback, Pointer user);
+
+
+	static interface  pcap_handler extends Callback {
+		public void gotPacket(Pointer args, Pointer header, Pointer packet);
+	}
 	/**
-	 * The {@code pcap_if} class represents a network inteface on the system tha can
-	 * be used for capturing the packet
+	 * The {@code  pcap_if} class represents a network inteface on the system that
+	 * can be used for capturing the packet
+	 * <br>
+	 * </br>
+	 * Structure in c:
+	 * 
+	 * <pre>
+	 * <code> struct pcap_if
+	 * {
+	 * struct pcap_if* next; //pointer that points to the next pcap_if 
+	 * char* name; 
+	 * char* description; // textual description of the interface 
+	 * pcap_addr* addresses; 
+	 * bpf_u_int32 flags; // PCAP_IF_ interface flags 
+	 * }</code>
+	 * </pre>
 	 * 
 	 * @author Ankit Bhattarai
-	 * @version 1.0
-	 * 
 	 */
+
+	
+	 
 	public static class pcap_if extends Structure {
 
 		public pcap_if.ByReference next;/* pointer that points to the next pcap_if */
@@ -73,10 +126,21 @@ public class NativeWpcapMapping {
 		}
 	}
 
-	/* Representation of an interface address */
-	/*
-	 * struct pcap_addr { struct pcap_addr *next; struct sockaddr *addr; struct
-	 * sockaddr *netmask; struct sockaddr *broadaddr; struct sockaddr *dstaddr; };
+	/**
+	 * Representation of an interface address
+	 * 
+	 * <pre>
+	 * Structure pcap_addr  in c:
+	 * {@code
+	 * struct pcap_addr{
+	 * 	struct pcap_addr * next; 
+	 * 	struct sockaddr * addr; //address
+	 * 	struct sockaddr * netmask; //netmask for that address
+	 * 	struct sockaddr * brodaddr; // broadcast address for that address
+	 * 	struct sockaddr * dstaddr; // P2P destination address for that addres
+	 * }
+	 * 
+	 * </pre>
 	 */
 
 	public static class pcap_addr extends Structure {
@@ -106,7 +170,22 @@ public class NativeWpcapMapping {
 
 	/**
 	 * The {@code soc_addr} class represents the socket address
+	 * <br></br>
+	 * The Structure soc_addr in c:
 	 * 
+	 * <pre>
+	 * <code>
+	 * struct soc_addr{
+	 * #if (_WIN32_WINNT < 0x600)
+	 * 	u_short sa_family;
+	 * #else 
+	 * 	ADDRESS_FAMILY sa_family; //Address Family
+	 * #endif //(_WIN32_WINNT < 0x600)
+	 * 		CHAR sa_data[14]; // Up to 14 bytes of direct address.
+	 * 
+	 * } SOCKADDR, *PSOCKADDR, FAR *LPSOCKADDR;
+	 * </code>
+	 * </pre>
 	 */
 
 	public static class soc_addr extends Structure {
@@ -152,25 +231,43 @@ public class NativeWpcapMapping {
 		}
 	}
 
-	// IPv4 Socket address, Internet style
-	/*
-	 * struct sockaddr_in{ #if(_WIN32_WINNT<0x600) short sin_family #else
-	 * ADDRESS_FAMILY sin_family; #endif USHORT sin_port; IN_ADDR sin_addr; CHAR
-	 * sin_zero[8] }
-	 */
-	public static class sockadr_in extends Structure {
+	 /**
+	  * The {@code in_addr} class represents IPv4 Socket address, Internet style.
+	  * <br></br>
+	  * The Structure sockadr_in in c is as follows:
+	  * <pre>
+	  * <code>
+	  * struct sockaddr_in{
+		* #if(_WIN32_WINNT<0x600)
+		* 	short sin_family;
+		* #else
+		* 	ADDRESS_FAMILY sin_family;
+		* #endif //(_WIN32_WINNT<0x600)
+		* 	USHORT sin_port;
+		* 	IN_ADDR sin_addr;
+		* 	CHAR sin_zero[8];
+		* 	#if(_WIN32_WINNT<0x600)	
+		* } SOCKADDR_IN, *PSOCKADDR_IN, *LPSOCKADDR_IN;
+	  *	</code>
+	  *	</pre>
+	  *
+	  */
+	public static class sockaddr_in extends Structure {
 		public short sin_family;
 		public short sin_port;
 		public in_addr sin_addr;
 		public char[] sin_zero = new char[8];
 
-		public static class ByReference extends sockadr_in implements Structure.ByReference {
+		public static class ByReference extends sockaddr_in implements Structure.ByReference {
 		}
 
-		public sockadr_in() {
+		public static class ByValue  extends sockaddr_in implements Structure.ByValue {
 		}
 
-		public sockadr_in(Pointer p) {
+		public sockaddr_in() {
+		}
+
+		public sockaddr_in(Pointer p) {
 			super(p);
 			read();
 		}
@@ -189,21 +286,26 @@ public class NativeWpcapMapping {
 		}
 	}
 
-	// IPv6 socket address structure , RFC 3439
-	/*
-	 * ADDRESS_FAMILY sin6_famly; //AF_INET6 USHORT sin6_port; //Transport level
-	 * port number ULONG sin6_flowinfo //IPv6 flow interface IN6_ADDR sin6_addr;
-	 * //Ipv6 address
-	 * 
-	 * union{ ULONG sin6_scopt_id; // set of interface for a scope SCOPE_ID
-	 * sin6_scope_struct; }
-	 * 
-	 */
-
 	/**
 	 * The {@code socaddr_in6} class represents a IPv6 socket address , RFC 3439
 	 * <p>
 	 * </p>
+	 * <pre>
+	 * <code>
+	 * struct sockaddr_in6{
+	     ADDRESS_FAMILY sin6_family;
+	     USHORT sin6_port;
+	     ULONG sin6_flowinfo;
+	     IN6_ADDR sin6_addr;
+	     SCOPE_ID sin6_scope_id;
+	     }SOCKADDR_IN6, *PSOCKADDR_IN6, *LPSOCKADDR_IN6;
+	 * </code>
+	 * </pre>
+	 * 
+	 * @author Ankit Bhattarai
+	 }
+	 * <code>
+	 * </pre>
 	 *
 	 * @author Ankit Bhattarai
 	 * @version 1.0
@@ -230,6 +332,30 @@ public class NativeWpcapMapping {
 
 	}
 
+	/**
+	 * The {@code in_addr} class represents the IPv4 Internet address (RFC 790)
+	 * <p> This is 'on-wire' format structure </p>
+	 * The Structure in c is as follows: 
+	 * <pre>
+	 * <code>
+	 * typedef struct in_addr {
+	*  union {
+	*	struct{UCHAR s_b1,s_b2,s_b3,s_b4;} S_un_b;
+	*	struct{USHORT s_w1,s_w2;} S_un_w;
+	*	ULONG S_addr;
+	*	} S_un;
+	* #define s_addr S_un.S_addr // can be used for most tcp/ip code
+	* #define s_host S_un.S_un_b.s_b2 //host on imp
+	* #define s_net S_un.S_un_b.s_b1 //network
+	* #define s_imp S_un.S_un_w.s_w2 //sub-network
+	* #define s_impno S_un.S_un_b.s_b4 //node (host) number
+	* #define s_lh S_un.S_un_b.s_b3 //sub-host
+	*}IN_ADDR, *PIN_ADDR, FAR *LPIN_ADDR;
+	 * </code>
+	 * </pre>
+	 * 
+	 * 
+	 */
 	public static class in_addr extends Structure {
 		// unsigned long S_addr
 		public NativeLong S_addr; // Represents the addres in a 32 bit long format
@@ -248,6 +374,17 @@ public class NativeWpcapMapping {
 	 * <p>
 	 * this is 'on-wire' format structure
 	 * </p>
+	 * 
+	 * <pre>
+	 * <code>
+	 * typedef struct in6_addr {
+	       union {
+	*		unsigned char  Byte[16];
+	*		unsigned short Word[8];
+	*		} u;
+	*	} IN6_ADDR, *PIN6_ADDR, *LPIN6_ADDR;
+	 * </code>
+	 * <pre>
 	 * 
 	 * @author Ankit Bhattarai
 	 * @version 1.0
@@ -300,6 +437,21 @@ public class NativeWpcapMapping {
 	 * struct pcap_pkthdr{ struct timeval timeval; bfu_u_int32 caplen; bfu_u_int32
 	 * len; }
 	 */
+
+	 /**
+	 * Generic per-packet information, as supplied by libpcap.
+	 *<pre>
+	 * <code>
+	 * typedef struct pcap_pkthdr {
+		struct timeval ts; // time stamp
+		bf_u_int32 caplen; // length of portion present
+		bf_u_int32 len; // length this packet (off wire)
+	 }	
+	 </code>
+	 </pre>
+	 * 
+	 */
+	
 
 	public static class pcap_pkthdr extends Structure {
 		public timeval timeval; /* time stamp */

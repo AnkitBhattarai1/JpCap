@@ -4,7 +4,7 @@ import java.net.InetAddress;
 
 import org.jcap.Core.Native.NativeWpcapMapping.pcap_addr;
 import org.jcap.Core.Native.NativeWpcapMapping.soc_addr;
-import org.jcap.Core.Native.NativeWpcapMapping.sockadr_in;
+import org.jcap.Core.Native.NativeWpcapMapping.sockaddr_in;
 import org.jcap.Core.Utils.InetConverter;
 
 /**
@@ -64,7 +64,7 @@ public class JpCapIPv4Address extends JpCapAbstractAddress {
 
 	@Override
 	protected InetAddress toInetAddress(soc_addr sa) {
-		sockadr_in address = new sockadr_in(sa.getPointer());
+		sockaddr_in address = new sockaddr_in(sa.getPointer());
 		return InetConverter.toInet4Address(address.sin_addr);
 	}
 

@@ -25,5 +25,6 @@
 
     <modules>
     	<module>Core</module>
+        <module>example</module>
     </modules>
 </project>

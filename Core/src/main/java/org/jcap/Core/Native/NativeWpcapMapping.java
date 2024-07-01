@@ -73,6 +73,10 @@ public class NativeWpcapMapping {
 	public static native Pointer pcap_open_offline_with_tstamp_precision(String fname, int tstamp_precision);
 	
 	public static native int pcap_loop(Pointer p, int cnt, pcap_handler callback, Pointer user);
+	
+	public static native int pcap_dispatch(Pointer p, int cnt,  pcap_handler callback, Pointer user);
+
+
 
 
 	static interface  pcap_handler extends Callback {
@@ -429,14 +433,6 @@ public class NativeWpcapMapping {
 			return Native.toString(buf);
 		}
 	}
-
-	/*
-	 * Generic per-packet information, as supplied by libpcap/wpcap
-	 */
-	/*
-	 * struct pcap_pkthdr{ struct timeval timeval; bfu_u_int32 caplen; bfu_u_int32
-	 * len; }
-	 */
 
 	 /**
 	 * Generic per-packet information, as supplied by libpcap.

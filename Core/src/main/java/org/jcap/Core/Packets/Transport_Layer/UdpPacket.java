@@ -52,12 +52,6 @@ public class UdpPacket implements Packet {
         throw new UnsupportedOperationException("Unimplemented method 'containsPacketOf'");
     }
 
-    @Override
-    public PacketBuilder Builder() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'Builder'");
-    }
-
     public static final class UdpHeader implements L4Header {
 
         private final UdpPort srcPort;

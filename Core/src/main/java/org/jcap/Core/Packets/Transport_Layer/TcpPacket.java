@@ -7,10 +7,11 @@ import org.jcap.Core.Constants.NamedCodes.L4.Port;
 import org.jcap.Core.Constants.NamedCodes.L4.TcpOptionKind;
 import org.jcap.Core.Constants.NamedCodes.L4.TcpPort;
 import org.jcap.Core.Packets.Packet;
+import org.jcap.Core.Packets.RawPacket;
 import org.jcap.Core.Packets.Abstract_Layer_Packet.L4Packet.L4Header;
 import org.jcap.Core.Utils.ByteOperations;
 
-public class TcpPacket {
+public class TcpPacket implements Packet {
 
     private final TcpHeader header;
     private final Packet payLoad;
@@ -20,15 +21,58 @@ public class TcpPacket {
         this.payLoad = builder.playLoad;
     }
 
-    public static TcpPacketBuilder Builder() {
-        return new TcpPacketBuilder();
-    }
-
     public static TcpPacketBuilder Builder(byte[] rawData, int offset, int len) {
         return new TcpPacketBuilder(rawData, offset, len);
     }
 
-    private static final class TcpPacketBuilder {
+    public static TcpPacketBuilder Builder() {
+        return new TcpPacketBuilder();
+    }
+
+    @Override
+    public int length() {
+        int len = 0;
+        len += header.length();
+
+        return len;
+    }
+
+    @Override
+    public byte[] getRawData() {
+        byte[] rawData = new byte[length()];
+        System.arraycopy(header.getRawData(), 0, rawData, 0, header.getRawData().length);
+
+        byte[] bodyData = new byte[payLoad.length()];
+        System.arraycopy(bodyData, 0, rawData, header.getRawData().length, bodyData.length);
+
+        return rawData;
+    }
+
+    @Override
+    public Header getHeader() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getHeader'");
+    }
+
+    @Override
+    public Packet getPlayLoad() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPlayLoad'");
+    }
+
+    @Override
+    public <T extends Packet> T getPacketOf(Class<T> packetType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPacketOf'");
+    }
+
+    @Override
+    public <T extends Packet> boolean containsPacketOf(Class<T> packetType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'containsPacketOf'");
+    }
+
+    private static class TcpPacketBuilder implements PacketBuilder {
 
         private TcpHeader header;
         private Packet playLoad;
@@ -42,8 +86,7 @@ public class TcpPacket {
         private TcpPacketBuilder(byte[] rawData, int offset, int len) {
             ByteOperations.validate(rawData, offset, len);
             this.header = TcpHeader.builder(rawData, offset, len).build();
-
-            int playLoadlen = len - header.length();
+            this.playLoad = RawPacket.Builder(rawData, offset + header.length(), len).build();
 
             // TODO Implementation is to be done
             this.sealed = true;
@@ -393,7 +436,6 @@ public class TcpPacket {
                 if (tcpHeaderBuilder.dataoffset == 0) {
                     throw new IllegalStateException("dataOffset is not set");
                 }
-
                 // TODO To be completed
 
             }

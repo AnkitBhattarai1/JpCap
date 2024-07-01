@@ -77,35 +77,36 @@ public class DnsDomainName {
              * the raw data has reached the end of the domain name string within the DNS
              * message
              */
-            boolean terminated = false;
-            Short tempPointer = null;
-
-            this.labels = new ArrayList<>();
+            boolean terminated = false;// to indicate the end of the domain name string.
+            Short tempPointer = null; // to store the pointer value.
+            this.labels = new ArrayList<>();// list of the labels...
 
             while (position < len) {
                 // the first byte representing the length of the label;
                 int lengthoflabel = rawData[offset + position] & 0xFF;// masking with 0xFF to make it unsigned...
+
                 if (lengthoflabel == 0) { // length=0 meaning the end of labels.......
                     terminated = true;
                     break;
                 }
 
                 if ((lengthoflabel & LABEL_POINTER_FLAG) == LABEL_POINTER_FLAG) {
-                    // if the first two bit is 11 the preceeding 14bits represents the pointer
+                    // if the first two bit is 11 the preceeding 14 bits represents the pointer
                     // value....
                     // offset+position+1>rawdata.length
-                    // TODO need to check whether its len-(position+offset)
                     if ((len - position) < Short.BYTES)
                         throw new IllegalArgumentException("Not enough data for reading a pointer");
+
+                    /* 0X3FFF =0011 1111 1111 1111 */
                     tempPointer = (short) (ByteOperations.getShort(rawData, offset + position) & (0x3FFF));
+
                     terminated = true;
                     break;
                 }
-                // if the first two bit is 00 then the remaining 14 bits represents the lenght
+                // if the first two bit is 00 then the remaining 6 bits represents label.
                 // of the label in bytes ....
                 else if ((lengthoflabel & LABEL_POINTER_FLAG) == 0) {
                     position++; // gets to the start of the label
-                    // TODO need to check whether its len-(position+offset)
                     if (len - position < lengthoflabel)
                         throw new IllegalArgumentException("Not enough data to make the label");
                     // fetch the label from specified position from the rawdata..
@@ -113,7 +114,6 @@ public class DnsDomainName {
                     position += lengthoflabel;
                     continue;
                 } else {
-                    // TODO Implementation of CustomRawDataException.......
                     throw new IllegalArgumentException("A label must start with 00 or 11");
                 }
 
@@ -130,11 +130,13 @@ public class DnsDomainName {
 
         public DnsDomainNameBuilder labels(String[] labels) {
             for (String s : labels) {
+
                 if (s.length() > 63)
                     throw new IllegalArgumentException("The length of a label must not be more than 63");
             }
             if (sealed)
                 throw new UnsupportedOperationException("The field labels cannot be initialized again");
+
             this.labels = Arrays.asList(labels);
             this.name = String.join(".", this.labels);
 

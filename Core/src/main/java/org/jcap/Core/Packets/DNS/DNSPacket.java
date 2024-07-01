@@ -16,22 +16,6 @@ import org.jcap.Core.Utils.ByteOperations;
  */
 public class DNSPacket implements Packet {
 
-	/*
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |----------------------ID-----------------------|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |QR|---Opcode--|AA|TC|RD|RA|-Z|AD|CD|---RCODE---|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |--------------------QDCOUNT--------------------|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |--------------------ANCOUNT--------------------|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |--------------------NSCOUNT--------------------|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 * |--------------------ARCOUNT--------------------|
-	 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-	 */
-
 	private final DNSHeader dnsHeader;
 	private final List<DnsQuestion> questions;
 	private final List<DnsResourceRecord> answers;
@@ -67,8 +51,7 @@ public class DNSPacket implements Packet {
 
 	@Override
 	public DNSHeader getHeader() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getHeader'");
+		return dnsHeader;
 	}
 
 	@Override
@@ -88,8 +71,7 @@ public class DNSPacket implements Packet {
 	 *
 	 * @return A new instance of DNSPacketBuilder.
 	 */
-	@Override
-	public DNSPacketBuilder Builder() {
+	public static DNSPacketBuilder Builder() {
 		return new DNSPacketBuilder();
 	}
 
@@ -233,20 +215,18 @@ public class DNSPacket implements Packet {
 	public static final class DNSHeader implements Header {
 
 		/*
-		 * 1 1 1 1 1 1
-		 * 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * | ID |
+		 * |----------------------ID-----------------------|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |QR| Opcode |AA|TC|RD|RA| Z | RCODE |
+		 * |QR|---Opcode--|AA|TC|RD|RA|-Z|AD|CD|---RCODE---|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * | QDCOUNT |
+		 * |--------------------QDCOUNT--------------------|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * | ANCOUNT |
+		 * |--------------------ANCOUNT--------------------|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * | NSCOUNT |
+		 * |--------------------NSCOUNT--------------------|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * | ARCOUNT |
+		 * |--------------------ARCOUNT--------------------|
 		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 		 */
 

@@ -14,8 +14,6 @@ public interface Packet {
 
 	public <T extends Packet> boolean containsPacketOf(Class<T> packetType);
 
-	public PacketBuilder Builder();
-
 	public static interface PacketBuilder {
 		public Packet build();
 	}

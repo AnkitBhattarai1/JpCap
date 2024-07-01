@@ -1,13 +1,14 @@
 package org.jcap.Core.Packets.DNS;
 
-import java.nio.ByteBuffer;
-
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsClass;
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsResourceRecordType;
 import org.jcap.Core.Utils.ByteOperations;
 
-/*Dns Question
- *                                  1  1  1  1  1  1
+/**
+ * Dns Question
+ * 
+ * <pre>
+                                    1  1  1  1  1  1
       0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                                               |
@@ -18,9 +19,9 @@ import org.jcap.Core.Utils.ByteOperations;
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
     |                     QCLASS                    |
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- */
-
-/**
+ * 
+ * </pre>
+ * 
  * Represents a DNS (Domain Name System) question.
  * 
  * <p>
@@ -129,6 +130,7 @@ public class DnsQuestion {
          * @return This builder instance.
          * @throws UnsupportedOperationException If the builder is sealed.
          */
+
         public DnsQuestionBuilder questionName(DnsDomainName questionName) {
             if (sealed)
                 throw new UnsupportedOperationException("The field questionName cannot be initialized again");

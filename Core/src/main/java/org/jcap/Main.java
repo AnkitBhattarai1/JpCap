@@ -1,18 +1,9 @@
 package org.jcap;
 
-import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jcap.Core.Address.JpCapAddress;
-import org.jcap.Core.Interfaces.JpCapNetworkInterface;
-import org.jcap.Core.Native.NativeWpcapMapping;
 import org.jcap.Core.Packets.DNS.DnsDomainName;
-import org.jcap.Core.Packets.DNS.DnsRDataA;
-import org.jcap.Core.Utils.ByteOperations;
-
-import com.sun.jna.ptr.PointerByReference;
 
 public class Main {
     public static void main(String[] args) {
@@ -78,11 +69,17 @@ public class Main {
 
         // System.out.println();
 
-        DnsDomainName a = DnsDomainName.Builder().labels(List.of("google", "com")).build();
+        DnsDomainName a = DnsDomainName.Builder().labels(List.of("www", "example", "com")).build();
 
-        DnsDomainName b = DnsDomainName.Builder(a.getRawData(), 0, a.getRawData().length).build();
-        System.out.println(a);
-        System.out.println(b);
+        // DnsDomainName b = DnsDomainName.Builder(a.getRawData(), 0,
+        // a.getRawData().length).build();
+
+        byte[] rawData = a.getRawData();
+        System.out.println(Arrays.toString(rawData));
+        System.out.println(rawData.length);
+
+        // System.out.println(a);
+        // System.out.println(b);
 
     }
 }

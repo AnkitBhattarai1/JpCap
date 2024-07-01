@@ -8,9 +8,6 @@ public interface L4Packet extends Packet {
     @Override
     public L4Header getHeader();
 
-    @Override
-    public PacketBuilder Builder();
-
     public interface L4Header extends Header {
 
         public Port getSrcPort();

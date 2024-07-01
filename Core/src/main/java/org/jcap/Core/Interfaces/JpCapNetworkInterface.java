@@ -38,4 +38,13 @@ public class JpCapNetworkInterface {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return String.format("""
+					"Name: %s,
+					"description: %s,
+					"addresses: %s,
+				""", name, description, addresses);
+	}
+
 }

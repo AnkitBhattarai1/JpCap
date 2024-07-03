@@ -1,35 +1,53 @@
 package org.jpcap;
 
+import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
-import org.jcap.Core.Native.NativeWpcapMapping;
+import org.jcap.Core.Native.NativeWpcapMapping.pcap_pkthdr;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
+import java.util.function.BiConsumer;
 
+import org.jcap.Core.JpCap;
 import org.jcap.Core.Interfaces.JpCapNetworkInterface;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        PointerByReference alldevs = new PointerByReference();
-        NativeWpcapMapping.PcapErrbuf errbuf = new NativeWpcapMapping.PcapErrbuf();
+        List<JpCapNetworkInterface> interfaces = JpCap.findAllDevs();
+        Pointer p = JpCap.openInteface(interfaces.get(3).name);
 
-        List<JpCapNetworkInterface> interfaces = new ArrayList<>();
+        System.out.println("Listening");
 
-        if (NativeWpcapMapping.pcap_findalldevs(alldevs, errbuf) != 0) {
-            System.err.println("Error callingpcap_findalldevs:" + errbuf);
-            return;
+        File f = new File("C:/Users/Ankit/Desktop/" + System.currentTimeMillis() + ".txt");
+        try {
+            f.createNewFile();
+        } catch (Exception e) {
+            // TODO: handle exception
         }
 
-        NativeWpcapMapping.pcap_if device = new NativeWpcapMapping.pcap_if(alldevs.getValue());
+        BiConsumer<PointerByReference, PointerByReference> onCapture = (header, packet) -> {
+            Pointer pkt = packet.getValue();
+            pcap_pkthdr hdr = new pcap_pkthdr(header.getValue());
 
-        while (device != null) {
-            interfaces.add(new JpCapNetworkInterface(device, false));
-            device = device.next;
-        }
+            for (int i = 0; i < hdr.len; i++) {
+                System.out.print((char) pkt.getByte(i));
+                try {
+                    // System.out.print(f.toString());
+                    FileWriter fw = new FileWriter(f, true);
+                    fw.write((char) pkt.getByte(i));
+                    fw.close();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
 
-        interfaces.forEach(System.out::println);
+            }
+            System.out.println();
+        };
 
-        NativeWpcapMapping.pcap_freealldevs(alldevs.getValue());
+        JpCap.capture(p, onCapture);
+
     }
 }

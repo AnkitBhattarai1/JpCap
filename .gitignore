@@ -2,8 +2,11 @@ Core/target/
 Core/.settings
 Core/.project
 Core/.classpath
+example/target
 
 .classpath
 .project
 .settings
 .vscode/settings.json
+example/target/classes/org/jpcap/Main.class
+example/target/classes/org/jpcap/Main.class

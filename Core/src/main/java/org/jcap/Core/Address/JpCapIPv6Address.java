@@ -33,6 +33,7 @@ public class JpCapIPv6Address extends JpCapAbstractAddress {
 	@Override
 	protected InetAddress toInetAddress(soc_addr sa) {
 		socaddr_in6 address = new socaddr_in6(sa.getPointer());
+
 		return InetConverter.toInet6Address(address.sin6_addr, address.sin6_scope_id);
 
 	}

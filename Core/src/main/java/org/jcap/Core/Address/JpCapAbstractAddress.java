@@ -22,10 +22,14 @@ public abstract class JpCapAbstractAddress implements JpCapAddress {
 	 * soc_addr.ByReference and a short value representing the expected address
 	 * family. It returns true if the network address meets all the following
 	 * conditions, otherwise false:
+	 * <ul>
 	 * 
-	 * 1. The network address is not null. 2. The family of the network address is
-	 * not set to Inets.AF_UNSPEC, indicating it's specified. 3. The family of the
-	 * network address matches the expected family (the second parameter).
+	 * <li>1. The network address is not null.</li>
+	 * <li>2. The family of the network address is
+	 * not set to Inets.AF_UNSPEC, indicating it's specified.</li>
+	 * <li>3. The family of the
+	 * network address matches the expected family (the second parameter).</li>
+	 * </ul>
 	 * 
 	 * Note: This predicate was designed with the potential to emit warnings if the
 	 * address family does not match the expected family, although the current

@@ -65,21 +65,48 @@ public class NativeWpcapMapping {
 	// tstamp_precision is the timestamp precision
 	public static native Pointer pcap_open_dead_with_tstamp_precision(int linktype, int snaplen, int tstamp_precision);
 
-	// fname is the name of the file to open
-	// linktype is the link layer type of the device
-	// snaplen is the maximum length of the packets to capture
-	// tstamp_precision is the timestamp precision
 
 	public static native Pointer pcap_open_offline_with_tstamp_precision(String fname, int tstamp_precision);
+	
 	
 	public static native int pcap_loop(Pointer p, int cnt, pcap_handler callback, Pointer user);
 	
 	public static native int pcap_dispatch(Pointer p, int cnt,  pcap_handler callback, Pointer user);
 
+//	PCAP_AVAILABLE_0_4
+//	PCAP_API const u_char *pcap_next(pcap_t *, struct pcap_pkthdr *);
+	public static native String pcap_next(Pointer pcap, pcap_pkthdr header);
+
+	//PCAP_AVAILABLE_0_8
+	//PCAP_API int 	pcap_next_ex(pcap_t *, struct pcap_pkthdr **, const u_char **);
+	public static native  int pcap_next_ex(Pointer pcap, PointerByReference header, PointerByReference pkt);
+
+	//PCAP_AVAILABLE_0_8
+	//PCAP_API void	pcap_breakloop(pcap_t *);
+	public static native int pcap_breakloop(Pointer pcap);
+
+	//PCAP_AVAILABLE_0_4
+	//PCAP_API int	pcap_stats(pcap_t *, struct pcap_stat *);
+	public static native int pcap_stats(Pointer pcap, pcap_stat stat);
+
+	public static native int  pcap_getnonblock(Pointer pcap , byte b);
+
+
+//PCAP_API pcap_t	*pcap_open(const char *source, int snaplen, int flags,
+//								int read_timeout, struct pcap_rmtauth *auth, char *errbuf);
+public static native Pointer pcap_open(
+									String source,
+									int snaplen, 
+									int promisc,
+									int read_timeout,
+									Pointer auth,
+									PcapErrbuf errbuf
+										);
 
 
 
-	static interface  pcap_handler extends Callback {
+	@FunctionalInterface										  
+	public static interface  pcap_handler extends Callback {
 		public void gotPacket(Pointer args, Pointer header, Pointer packet);
 	}
 	/**
@@ -102,9 +129,7 @@ public class NativeWpcapMapping {
 	 * 
 	 * @author Ankit Bhattarai
 	 */
-
-	
-	 
+ 
 	public static class pcap_if extends Structure {
 
 		public pcap_if.ByReference next;/* pointer that points to the next pcap_if */
@@ -453,12 +478,45 @@ public class NativeWpcapMapping {
 		public timeval timeval; /* time stamp */
 		public int caplen;/* length of the portion present */
 		public int len;/* length of this packet (of wire) */
+
+		public pcap_pkthdr(){
+		}
+		
+		public pcap_pkthdr(Pointer p){
+			super(p);
+			read();
+		}
+
+		public static class ByReference extends pcap_pkthdr implements Structure.ByReference {
+		}
+
+		@Override
+		protected List<String> getFieldOrder(){
+			return List.of("timeval","caplen","len");
+		}
 		// TODO: must be implemented fully
 	}
 
 	public static class timeval extends Structure {
 		public NativeLong tv_sec;/* seconds */
 		public NativeLong tv_usec;/* microseconds */
+
+		public timeval() {
+		}
+
+		public timeval(Pointer p) {
+			super(p);
+			read();
+		}
+
+		public static class ByReference extends timeval implements Structure.ByReference {
+		    
+		}
+
+		@Override
+		protected List<String> getFieldOrder(){
+			return List.of("tv_sec","tv_usec");
+		}
 		// TODO: must be implemented fully
 	}
 

@@ -89,19 +89,24 @@ public class NativeWpcapMapping {
 	//PCAP_API int	pcap_stats(pcap_t *, struct pcap_stat *);
 	public static native int pcap_stats(Pointer pcap, pcap_stat stat);
 
+	public static native int  pcap_setfilter(Pointer p, pcap_stat stat);
+
+	//public static native int  pcap_setdirection(Pointer p, pcap_direction direction);
+
 	public static native int  pcap_getnonblock(Pointer pcap , byte b);
 
+	public static native int pcap_setnonblock(Pointer p, int non_block, byte b);
 
-//PCAP_API pcap_t	*pcap_open(const char *source, int snaplen, int flags,
-//								int read_timeout, struct pcap_rmtauth *auth, char *errbuf);
-public static native Pointer pcap_open(
-									String source,
-									int snaplen, 
-									int promisc,
-									int read_timeout,
-									Pointer auth,
-									PcapErrbuf errbuf
-										);
+	//public static native int pcap_inject(Pointer p, Pointer buf, int size);//don't know what is size
+
+	//PCAP_AVAILABLE_0_8
+	//	PCAP_API void PCAP_API int pcap_sendpacket(pcap_t *p, const u_char *, int);
+		public static native int pcap_sendpacket(Pointer p, Pointer buf, int size);
+
+
+	//PCAP_API pcap_t	*pcap_open(const char *source, int snaplen, int flags,
+	//int read_timeout, struct pcap_rmtauth *auth, char *errbuf);
+	public static native Pointer pcap_open(String source,int snaplen, int promisc,int read_timeout,Pointer auth,PcapErrbuf errbuf);
 
 
 
@@ -528,6 +533,21 @@ public static native Pointer pcap_open(
 
 	public static class pcap_stat_ex extends Structure {
 		// TODO:To be implemented later
+	}
+
+	public enum pcap_direction{
+		PCAP_D_INOUT((byte)0),
+		PCA__D_IN((byte)1),
+		PCAP_D_OUT((byte)2);
+
+
+		byte value;
+
+		pcap_direction(byte  value){
+		    this.value=value;
+		}
+
+		public int getValue(){ return value;}
 	}
 
 }

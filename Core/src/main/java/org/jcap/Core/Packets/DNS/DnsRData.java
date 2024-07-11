@@ -9,4 +9,8 @@ public interface DnsRData {
     public String toString(String indent);
 
     public String toString(String indent, byte[] headerRawData);
+
+    public static interface DnsRDataBuilder {
+        public DnsRData build();
+    }
 }

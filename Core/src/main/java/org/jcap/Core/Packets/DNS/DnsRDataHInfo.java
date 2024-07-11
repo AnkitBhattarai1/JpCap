@@ -130,6 +130,7 @@ public class DnsRDataHInfo implements DnsRData {
             if (os.length() > 255)
                 throw new IllegalArgumentException("The length of the os cannot be more than 256");
             this.cpu = cpu;
+
             return this;
         }
 

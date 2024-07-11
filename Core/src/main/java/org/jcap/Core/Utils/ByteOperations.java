@@ -71,6 +71,16 @@ public class ByteOperations {
 	}
 
 	/**
+	 * Converts a integer value to a byte array with Big_Endian byte order....
+	 * 
+	 * @param value the short to convert
+	 * @return a byte array representing the short in the specified byte order
+	 */
+	public static byte[] getByteArray(int value) {
+		return getByteArray(value, ByteOrder.BIG_ENDIAN);
+	}
+
+	/**
 	 * Converts an integer value to a byte array based on the specified byte order.
 	 * 
 	 * @param value the integer to convert

@@ -53,4 +53,9 @@ public class DnsClass extends NamedCode<Short, DnsClass> {
     return 0;
   }
 
+  @Override
+  public String toString() {
+    return getName() + "(0x" + String.format("%04x", getValue()) + ")";
+  }
+
 }

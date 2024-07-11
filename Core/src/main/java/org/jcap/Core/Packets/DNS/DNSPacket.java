@@ -14,6 +14,7 @@ import org.jcap.Core.Utils.ByteOperations;
  * and additional information. This class extends the AbstractPacket class to
  * provide specific implementations for DNS packet structures.
  */
+
 public class DNSPacket implements Packet {
 
 	private final DNSHeader dnsHeader;
@@ -31,10 +32,24 @@ public class DNSPacket implements Packet {
 		this.additionlInformation = builder.additionalInformation;
 	}
 
+	// private Function<List<DnsResourceRecord>, Integer> getRecordLength = (ls) ->
+	// {
+	// int len = 0;
+	// for (DnsResourceRecord r : ls)
+	// len += r.length();
+	// return len;
+	// };
+
 	@Override
 	public int length() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'length'");
+
+		int len = 0;
+		len += dnsHeader.length();
+		for (DnsQuestion q : questions)
+			len += q.length();
+
+		return len;
+
 	}
 
 	@Override
@@ -175,6 +190,23 @@ public class DNSPacket implements Packet {
 	 * protocol to facilitate internet name resolution services. The class includes
 	 * mechanisms to both parse raw DNS message data and build DNS headers
 	 * programmatically.
+	 * 
+	 * 
+	 * <pre>
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |----------------------ID-----------------------|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |QR|---Opcode--|AA|TC|RD|RA|-Z|AD|CD|---RCODE---|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |--------------------QDCOUNT--------------------|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |--------------------ANCOUNT--------------------|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |--------------------NSCOUNT--------------------|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+		 * |--------------------ARCOUNT--------------------|
+		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+	 * </pre>
 	 * <p>
 	 * The DNS header includes the following fields:
 	 * </p>
@@ -213,22 +245,6 @@ public class DNSPacket implements Packet {
 	 */
 
 	public static final class DNSHeader implements Header {
-
-		/*
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |----------------------ID-----------------------|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |QR|---Opcode--|AA|TC|RD|RA|-Z|AD|CD|---RCODE---|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |--------------------QDCOUNT--------------------|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |--------------------ANCOUNT--------------------|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |--------------------NSCOUNT--------------------|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 * |--------------------ARCOUNT--------------------|
-		 * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-		 */
 
 		private final short Id;
 		private final boolean response; //
@@ -323,7 +339,7 @@ public class DNSPacket implements Packet {
 				this.sealed = true;
 			}
 
-			public DNSHeaderBuilder() {
+			public DNSHeaderBuilder() {// For custom building of DnsHeader...
 			}
 
 			public DNSHeader build() {

@@ -1,6 +1,7 @@
 package org.jcap.Core.Packets.DNS;
 
-public class DnsRDataMInfo /* implements DnsRData */ {
+public class DnsRDataMInfo implements DnsRData
+/* implements DnsRData */ {
 
     private final DnsDomainName RMAILBX;
     private final DnsDomainName EMAILBX;
@@ -46,5 +47,29 @@ public class DnsRDataMInfo /* implements DnsRData */ {
         public DnsRDataMInfo build() {
             return new DnsRDataMInfo(this);
         }
+    }
+
+    @Override
+    public int length() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'length'");
+    }
+
+    @Override
+    public byte[] getRawData() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getRawData'");
+    }
+
+    @Override
+    public String toString(String indent) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toString'");
+    }
+
+    @Override
+    public String toString(String indent, byte[] headerRawData) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toString'");
     }
 }

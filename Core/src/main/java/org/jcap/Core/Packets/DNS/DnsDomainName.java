@@ -9,6 +9,7 @@ import java.util.List;
  *  This allows a maximum label length of `63` because the largest number a 6-bit number can represent is `63` (`2^6 - 1`).
  *  The restriction helps ensure efficient parsing, memory management, and protocol uniformity, minimizing the risk of buffer overflow vulnerabilities in network communications.
  */
+
 import org.jcap.Core.Utils.ByteOperations;
 
 public class DnsDomainName {

@@ -12,13 +12,14 @@ import org.jcap.Core.Utils.InetConverter;
  */
 public class DnsRDataA implements DnsRData {
 
-    private final Inet4Address address;
+    private Inet4Address address;
 
     private boolean addressPlainText;
 
     private DnsRDataA(DnsRDataABuilder builder) {
         // TODO Validation is to be done ...
-        this.address = builder.address;
+        // this.address = builder.address;
+        System.out.println("The DnsRDataA is build successfully");
     }
 
     @Override
@@ -57,7 +58,7 @@ public class DnsRDataA implements DnsRData {
         return new DnsRDataABuilder(rawData, offset, len);
     }
 
-    public static final class DnsRDataABuilder {
+    public static final class DnsRDataABuilder implements DnsRDataBuilder {
         Inet4Address address;
         private boolean sealed;
 

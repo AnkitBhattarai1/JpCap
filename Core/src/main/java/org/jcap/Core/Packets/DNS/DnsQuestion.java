@@ -89,7 +89,7 @@ public class DnsQuestion {
         return new DnsQuestionBuilder(rawdata, offset, len);
     }
 
-    private static final class DnsQuestionBuilder {
+    public static final class DnsQuestionBuilder {
 
         private DnsDomainName questionName;
         private DnsResourceRecordType questionType;
@@ -229,6 +229,38 @@ public class DnsQuestion {
         System.arraycopy(ByteOperations.getByteArray(questionClass.getValue()), 0, rawData, position, Short.BYTES);
 
         return rawData;
+    }
+
+    @Override
+    public String toString() {
+        return convertToString("", null);
+    }
+
+    public String toString(String indent, byte[] headerRawData) {
+        if (headerRawData == null) {
+            throw new NullPointerException("headerRawData is null.");
+        }
+        return convertToString(indent, headerRawData);
+    }
+
+    private String convertToString(String indent, byte[] headerRawData) {
+        StringBuilder sb = new StringBuilder();
+        String ls = System.getProperty("line.separator");
+
+        sb.append(indent)
+                .append("QNAME: ")
+                .append(headerRawData != null ? questionName : questionName)
+                .append(ls)
+                .append(indent)
+                .append("QTYPE: ")
+                .append(questionType)
+                .append(ls)
+                .append(indent)
+                .append("QCLASS: ")
+                .append(questionClass)
+                .append(ls);
+
+        return sb.toString();
     }
 
     @Override

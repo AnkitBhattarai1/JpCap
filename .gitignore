@@ -10,3 +10,4 @@ example/target
 .vscode/settings.json
 example/target/classes/org/jpcap/Main.class
 example/target/classes/org/jpcap/Main.class
+ProgressRepor.txt

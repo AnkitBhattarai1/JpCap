@@ -2,8 +2,9 @@ package org.jcap.Core.Packets.DNS;
 
 import org.jcap.Core.Utils.ByteOperations;
 
-/*
+/**
  * DNS SOA RDATA
+ * 
  * <pre style="white-space: pre;">
  * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  * /                     MNAME                     /
@@ -26,6 +27,7 @@ import org.jcap.Core.Utils.ByteOperations;
  * |                    MINIMUM                    |
  * |                                               |
  * +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ * 
  *
  * where:
  *
@@ -52,10 +54,9 @@ import org.jcap.Core.Utils.ByteOperations;
  *
  * MINIMUM         The unsigned 32 bit minimum TTL field that should be
  *                 exported with any RR from this zone.
+ *
+ * </pre>
  * 
- * */
-
-/**
  * Represents the Start of Authority (SOA) Resource Record (RR) data structure
  * in the Domain Name System (DNS).
  * <p>
@@ -209,12 +210,16 @@ public class DnsRDataSoa implements DnsRData {
 
             this.serial = ByteOperations.getInt(rawData, offset + position);
             position += Integer.BYTES;
+
             this.refresh = ByteOperations.getInt(rawData, offset + position);
             position += Integer.BYTES;
+
             this.retry = ByteOperations.getInt(rawData, offset + position);
             position += Integer.BYTES;
+
             this.expire = ByteOperations.getInt(rawData, offset + position);
             position += Integer.BYTES;
+
             this.minimum = ByteOperations.getInt(rawData, offset + position);
             position += Integer.BYTES;
 
@@ -233,6 +238,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the rName once it is initialized from rawData");
+
             this.rName = name;
             return this;
         }
@@ -241,6 +247,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the serial once it is initialized from rawData");
+
             this.serial = value;
             return this;
         }
@@ -249,6 +256,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the refresh once it is initialized from rawData");
+
             this.refresh = value;
             return this;
         }
@@ -257,6 +265,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the retry once it is initialized from rawData");
+
             this.retry = value;
             return this;
         }
@@ -265,6 +274,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the expire once it is initialized from rawData");
+
             this.expire = value;
             return this;
         }
@@ -273,6 +283,7 @@ public class DnsRDataSoa implements DnsRData {
             if (sealed)
                 throw new UnsupportedOperationException(
                         "Cannot inintialize the minimum once it is initialized from rawData");
+
             this.minimum = value;
             return this;
         }

@@ -26,6 +26,7 @@ public class JpCap {
 		PcapErrbuf buf = new PcapErrbuf();
 
 		synchronized (lock) {
+
 			if (pcap_findalldevs(alldevs, buf) != 0)
 				throw new RuntimeException("Cannot find the devices....");// Custom exception is to be implemented....
 
@@ -46,7 +47,7 @@ public class JpCap {
 		Pointer p = pcap_open(name, 65536, 1, 1000, null, err);
 
 		if (p == null)
-			throw new RuntimeException("Cannot open the interface");// Custom exception is to be
+			throw new RuntimeException(err.toString());// Custom exception is to be
 		// implemented....
 
 		return p;
@@ -57,11 +58,15 @@ public class JpCap {
 		PointerByReference packet = new PointerByReference();
 		int res;
 		while ((res = pcap_next_ex(pcap, header, packet)) >= 0) {
-			if (res == 0) {
+			if (res == 0)
 				continue;
-			}
 
 			onCapture.accept(header, packet);
 		}
 	}
+
+	public static void openAndCapture(String name, BiConsumer<PointerByReference, PointerByReference> onCapture) {
+		capture(openInteface(name), onCapture);
+	}
+
 }

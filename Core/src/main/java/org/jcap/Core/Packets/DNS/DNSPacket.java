@@ -9,10 +9,25 @@ import org.jcap.Core.Packets.Packet;
 import org.jcap.Core.Utils.ByteOperations;
 
 /**
- * Represents a DNS packet that includes a {@link DNSHeader}, {@link DnsQuestion
+ * Represents a DNS packet that includes a {@link DNSHeader},
+ * {@link DnsQuestion
  * }, and various {@link DnsResourceRecord} sections such as answers, authority,
- * and additional information. This class extends the AbstractPacket class to
+ * and additional information. This class Implements the {@Packet} Interface to
  * provide specific implementations for DNS packet structures.
+ * 
+ * <pre>
+ *  +---------------------+
+ *   |        Header       |
+ *   +---------------------+
+ *   |       Question      | the question for the name server
+ *   +---------------------+
+ *   |        Answer       | RRs answering the question
+ *   +---------------------+
+ *   |      Authority      | RRs pointing toward an authority
+ *   +---------------------+
+ *   |      Additional     | RRs holding additional information
+ *   +---------------------+
+ * </pre>
  */
 
 public class DNSPacket implements Packet {

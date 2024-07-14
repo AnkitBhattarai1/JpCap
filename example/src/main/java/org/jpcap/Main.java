@@ -60,8 +60,13 @@ public class Main {
         DnsResourceRecordType a = DnsResourceRecordType.A;
         DnsClass In = DnsClass.IN;
         DnsQuestion q = DnsQuestion.Builder().questionName(google).questionClass(In).questionType(a).build();
+        byte[] rawData = q.getRawData();
+
+        DnsQuestion q2 = DnsQuestion.Builder(rawData, 0, rawData.length).build();
 
         System.out.println(q);
+
+        System.out.println(q2);
 
     }
 }

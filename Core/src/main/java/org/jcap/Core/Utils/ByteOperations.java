@@ -280,4 +280,35 @@ public class ByteOperations {
 		if (offset < 0 || len < 0 || offset + len > arr.length)
 			throw new ArrayIndexOutOfBoundsException();
 	}
+
+	public static byte[] parseInet4Address(String addr) {
+		String[] octetStrs = addr.split("\\.", 4);
+		if (octetStrs.length != Integer.BYTES) {
+			throw new IllegalArgumentException("Couldn't get an Inet4Address from " + addr);
+		}
+
+		byte[] octets = new byte[4];
+		for (int i = 0; i < octets.length; i++) {
+			String octetStr = octetStrs[i];
+			try {
+				int octet = Integer.parseInt(octetStr);
+				if (octet < 0 || octet > 255) {
+					throw new IllegalArgumentException("Couldn't get an Inet4Address from " + addr);
+				}
+				octets[i] = (byte) octet;
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Couldn't get an Inet4Address from " + addr);
+			}
+		}
+
+		return octets;
+	}
+
+	public static byte[] getSubArray(byte[] array, int offset, int length) {
+		validate(array, offset, length);
+
+		byte[] subArray = new byte[length];
+		System.arraycopy(array, offset, subArray, 0, length);
+		return subArray;
+	}
 }

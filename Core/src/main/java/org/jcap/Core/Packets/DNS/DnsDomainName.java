@@ -4,13 +4,53 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jcap.Core.Utils.ByteOperations;
+
 /*
+ * Notes:
  * In DNS protocol, each label of a domain name is prefixed by a single byte indicating the label's length, but only the lower 6 bits of this byte are used for this purpose.
  *  This allows a maximum label length of `63` because the largest number a 6-bit number can represent is `63` (`2^6 - 1`).
  *  The restriction helps ensure efficient parsing, memory management, and protocol uniformity, minimizing the risk of buffer overflow vulnerabilities in network communications.
  */
 
-import org.jcap.Core.Utils.ByteOperations;
+/**
+ * Represents a domain name in the DNS protocol.
+ * 
+ * <p>
+ * This class provides methods to construct a domain name from raw DNS message
+ * data, retrieve the raw byte representation of a domain name, and convert a
+ * domain name to a human-readable string. It also supports domain name
+ * compression through pointers.
+ * </p>
+ * 
+ * <p>
+ * Example usage:
+ * 
+ * <pre>
+ * {@code
+ * /// Creating a domain name from raw data
+ * byte[] rawData = ...;
+ * DnsDomainName domainName = DnsDomainName.Builder(rawData, offset, length).build();
+ * 
+ * /// Creating a custom domain name
+ * DnsDomainName customDomainName = DnsDomainName.Builder()
+ *     .labels(new String[] {"www", "example", "com"})
+ *     .build();
+ * 
+ * ///Getting the raw byte data of a domain name
+ * byte[] rawData = domainName.getRawData();
+ * 
+ * ///Converting a domain name to a string
+ * String domainNameString = domainName.toString();
+ * }
+ * </pre>
+ * </p>
+ * 
+ * <p>
+ * The root domain name is represented by a static instance,
+ * {@code ROOT_DOMAIN}.
+ * </p>
+ */
 
 public class DnsDomainName {
 
@@ -40,10 +80,24 @@ public class DnsDomainName {
      */
     private static final int POINTER_MASK = 0x3FFF;
 
+    /**
+     * Creates a new builder for constructing a {@link DnsDomainName} instance.
+     * 
+     * @return a new {@link DnsDomainNameBuilder} instance
+     */
     public static DnsDomainNameBuilder Builder() {
         return new DnsDomainNameBuilder();
     }
 
+    /**
+     * Creates a new builder for constructing a {@link DnsDomainName} instance from
+     * raw data.
+     * 
+     * @param rawData the raw byte array containing the DNS domain name data
+     * @param offset  the offset within the raw data where the domain name starts
+     * @param len     the length of the domain name data
+     * @return a new {@link DnsDomainNameBuilder} instance
+     */
     public static DnsDomainNameBuilder Builder(byte[] rawData, int offset, int len) {
         return new DnsDomainNameBuilder(rawData, offset, len);
     }
@@ -56,6 +110,10 @@ public class DnsDomainName {
         // TODO Validation is to be done
     }
 
+    /**
+     * A builder for constructing {@link DnsDomainName} instances.
+     *
+     */
     public static class DnsDomainNameBuilder {
 
         private List<String> labels;
@@ -144,13 +202,24 @@ public class DnsDomainName {
             return this;
         }
 
+        /**
+         * Sets the labels of the domain name.
+         * 
+         * @param labels the array of labels
+         * @return the builder instance
+         * @throws IllegalArgumentException      if any label exceeds 63 characters
+         * @throws UnsupportedOperationException if the labels field is already
+         *                                       initialized
+         */
         public DnsDomainNameBuilder labels(List<String> labels) {
             for (String s : labels) {
                 if (s.length() > 63)
                     throw new IllegalArgumentException("The length of a label must not be more than 63");
             }
+
             if (sealed)
                 throw new UnsupportedOperationException("The field labels cannot be initialized again");
+
             this.labels = labels;
             this.name = String.join(".", this.labels);
             return this;
@@ -165,6 +234,11 @@ public class DnsDomainName {
             return this;
         }
 
+        /**
+         * Builds the {@link DnsDomainName} instance.
+         * 
+         * @return the constructed {@link DnsDomainName} instance
+         */
         public DnsDomainName build() {
             validate(this);
             return new DnsDomainName(this);
@@ -176,6 +250,11 @@ public class DnsDomainName {
 
     }
 
+    /**
+     * Gets the length of the domain name in bytes.
+     * 
+     * @return the length of the domain name in bytes
+     */
     public int length() {
         int len = 0;
         for (String label : labels) {
@@ -189,6 +268,11 @@ public class DnsDomainName {
         return len;
     }
 
+    /**
+     * Gets the raw byte data of the domain name.
+     * 
+     * @return the raw byte data of the domain name
+     */
     public byte[] getRawData() {
         byte[] data = new byte[length()];
         int cursor = 0;

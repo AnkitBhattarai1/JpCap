@@ -4,11 +4,8 @@ import org.jcap.Core.Constants.NamedCodes.NamedCode;
 
 public abstract class Port extends NamedCode<Short, Port> {
 
-    private final String description;
-
-    protected Port(Short value, String name, String description) {
+    protected Port(Short value, String name) {
         super(value, name);
-        this.description = description;
         // TODO Auto-generated constructor stub
     }
 

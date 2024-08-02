@@ -21,8 +21,6 @@ ADDRESS         A 32 bit Internet address.
 Hosts that have multiple Internet addresses will have multiple A
 records.
  * </pre>
- * 
- * 
  */
 public class DnsRDataA implements DnsRData {
 
@@ -39,6 +37,13 @@ public class DnsRDataA implements DnsRData {
 
     public static DnsRDataABuilder Builder() {
         return new DnsRDataABuilder();
+    }
+
+    public static DnsRDataBuilder Builder(byte[] octets) {
+        if (octets.length != Integer.BYTES)
+            throw new IllegalArgumentException("The length of the octets is not equal to 4");
+
+        return new DnsRDataABuilder(octets, 0, 4);
     }
 
     public static DnsRDataABuilder Builder(byte[] rawData, int offset, int len) {
@@ -76,6 +81,11 @@ public class DnsRDataA implements DnsRData {
     }
 
     @Override
+    public String toString() {
+        return "A: " + getAddressString();
+    }
+
+    @Override
     public String toString(String indent) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'toString'");
@@ -85,6 +95,34 @@ public class DnsRDataA implements DnsRData {
     public String toString(String indent, byte[] headerRawData) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'toString'");
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((address == null) ? 0 : address.hashCode());
+        result = prime * result + (addressPlainText ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DnsRDataA other = (DnsRDataA) obj;
+        if (address == null) {
+            if (other.address != null)
+                return false;
+        } else if (!address.equals(other.address))
+            return false;
+        if (addressPlainText != other.addressPlainText)
+            return false;
+        return true;
     }
 
     public static final class DnsRDataABuilder implements DnsRDataBuilder {

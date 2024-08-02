@@ -1,4 +1,4 @@
-package org.jcap.Core.Packets.Transport_Layer;
+package org.jcap.Core.Packets.Transport;
 
 import org.jcap.Core.Packets.Packet;
 import org.jcap.Core.Packets.Abstract_Layer_Packet.L4Packet.L4Header;

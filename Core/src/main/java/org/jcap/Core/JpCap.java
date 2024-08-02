@@ -9,10 +9,12 @@ import org.jcap.Core.Interfaces.JpCapNetworkInterface;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import org.jcap.Core.Native.NativeWpcapMapping.PcapErrbuf;
+import org.jcap.Core.Native.NativeWpcapMapping.pcap_handler;
 import org.jcap.Core.Native.NativeWpcapMapping.pcap_if;
 
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_findalldevs;
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
+import static org.jcap.Core.Native.NativeWpcapMapping.pcap_loop;
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_next_ex;
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_open;
 
@@ -20,6 +22,13 @@ public class JpCap {
 
 	private static final Object lock = new Object();
 
+	/**
+	 * Finds all available network interfaces on the system.
+	 *
+	 * @return a list of {@link JpCapNetworkInterface} representing all network
+	 *         interfaces.
+	 * @throws RuntimeException if the devices cannot be found.
+	 */
 	public static List<JpCapNetworkInterface> findAllDevs() {
 		List<JpCapNetworkInterface> intf = new ArrayList<>();
 		PointerByReference alldevs = new PointerByReference();
@@ -42,7 +51,14 @@ public class JpCap {
 		return intf;
 	}
 
-	public static Pointer openInteface(String name) {
+	/**
+	 * Opens a network interface for capturing packets.
+	 *
+	 * @param name the name of the network interface to open.
+	 * @return a {@link Pointer} to the opened interface.
+	 * @throws RuntimeException if the interface cannot be opened.
+	 */
+	public static Pointer openInterface(String name) {
 		PcapErrbuf err = new PcapErrbuf();
 		Pointer p = pcap_open(name, 65536, 1, 1000, null, err);
 
@@ -53,6 +69,12 @@ public class JpCap {
 		return p;
 	}
 
+	/**
+	 * Captures packets from the specified network interface.
+	 *
+	 * @param pcap      the {@link Pointer} to the opened network interface.
+	 * @param onCapture a {@link BiConsumer} to handle captured packets.
+	 */
 	public static void capture(Pointer pcap, BiConsumer<PointerByReference, PointerByReference> onCapture) {
 		PointerByReference header = new PointerByReference();
 		PointerByReference packet = new PointerByReference();
@@ -65,8 +87,28 @@ public class JpCap {
 		}
 	}
 
+	/**
+	 * Opens a network interface and captures packets.
+	 *
+	 * @param name      the name of the network interface to open.
+	 * @param onCapture a {@link BiConsumer} to handle captured packets.
+	 */
 	public static void openAndCapture(String name, BiConsumer<PointerByReference, PointerByReference> onCapture) {
-		capture(openInteface(name), onCapture);
+		capture(openInterface(name), onCapture);
+	}
+
+	/**
+	 * Starts a packet capture loop.
+	 *
+	 * @param p         the {@link Pointer} to the opened network interface.
+	 * @param cnt       the number of packets to capture; use -1 for infinite.
+	 * @param onCapture a {@link pcap_handler} to handle captured packets.
+	 * @param user      a {@link Pointer} to user-defined data.
+	 * @return the result of the capture loop.
+	 */
+	public static int captureLoop(Pointer p, int cnt, pcap_handler onCapture, Pointer user) {
+		int result = pcap_loop(p, cnt, onCapture, user);
+		return result;
 	}
 
 }

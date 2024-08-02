@@ -2,6 +2,8 @@ package org.jcap.Core.Utils;
 
 import java.nio.ByteOrder;
 
+import org.jcap.Core.Address.MacAddress;
+
 /**
  * This class provides methods for performing byte-level operations,
  * such as converting primitive data types to byte arrays, reversing byte
@@ -310,5 +312,13 @@ public class ByteOperations {
 		byte[] subArray = new byte[length];
 		System.arraycopy(array, offset, subArray, 0, length);
 		return subArray;
+	}
+
+	public static MacAddress getMacAddress(byte[] arr, int offset) {
+		return getMacAddress(arr, offset, ByteOrder.BIG_ENDIAN);
+	}
+
+	public static MacAddress getMacAddress(byte[] array, int offset, ByteOrder bo) {
+		return null;
 	}
 }

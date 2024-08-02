@@ -2,6 +2,7 @@ package org.jcap.Core.Native;
 
 import java.nio.ByteOrder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.sun.jna.Callback;
@@ -89,7 +90,7 @@ public class NativeWpcapMapping {
 	//PCAP_API int	pcap_stats(pcap_t *, struct pcap_stat *);
 	public static native int pcap_stats(Pointer pcap, pcap_stat stat);
 
-	public static native int  pcap_setfilter(Pointer p, pcap_stat stat);
+	public static native int  pcap_setfilter(Pointer p, bpf_program fp);
 
 	//public static native int  pcap_setdirection(Pointer p, pcap_direction direction);
 
@@ -108,12 +109,44 @@ public class NativeWpcapMapping {
 	//int read_timeout, struct pcap_rmtauth *auth, char *errbuf);
 	public static native Pointer pcap_open(String source,int snaplen, int promisc,int read_timeout,Pointer auth,PcapErrbuf errbuf);
 
+	//PCAP_AVAILABLE_0_4
+	//PCAP_API int	pcap_datalink(pcap_t *);
+	public static native int pcap_datalink(Pointer p);
 
+	//PCAP_AVAILABLE_1_0
+	//PCAP_API int pcap_dataLink_ext(pcap_t *)
+	public static native int pcap_datalink_ext(Pointer p);
+
+	//PCAP AVAILABLE_0_8
+	//PCAP_API int	pcap_list_datalinks(pcap_t *, int**);
+	public static native int pcap_list_datalinks(Pointer p, PointerByReference links);
+
+
+
+
+
+
+
+
+
+	  // void pcap_freecode(struct bpf_program *fp)
+	public   static native void pcap_freecode(bpf_program fp);
+
+    // u_int bpf_filter(const struct bpf_insn *, const u_char *, u_int, u_int)
+  	public static native int bpf_filter(
+      bpf_insn.ByReference bpf_insn, byte[] packet, int wirelen, int buflen);
+
+	//PCAP_AVAILABLE_0_4
+	//PCAP_API int	pcap_compile(pcap_t *, struct bpf_program *, const char *, int,
+	    //bpf_u_int32);
+	public static native int pcap_compile(Pointer p, bpf_program fp, String str, int optimize, int netmask);
+	  
 
 	@FunctionalInterface										  
 	public static interface  pcap_handler extends Callback {
 		public void gotPacket(Pointer args, Pointer header, Pointer packet);
 	}
+
 	/**
 	 * The {@code  pcap_if} class represents a network inteface on the system that
 	 * can be used for capturing the packet
@@ -534,6 +567,41 @@ public class NativeWpcapMapping {
 	public static class pcap_stat_ex extends Structure {
 		// TODO:To be implemented later
 	}
+
+	public static class bpf_program extends Structure {
+	    public int bf_len;
+		public bpf_insn.ByReference bf_insns;
+
+		public bpf_program() {
+      	setAutoSynch(false);
+    		}
+	
+			@Override
+			protected List<String> getFieldOrder() {
+			    return Arrays.asList("bf_len", "bf_insns");
+			}
+	}
+
+	public static class bpf_insn extends Structure {
+		public short code;
+		public byte jt;
+		public byte jf;
+		public int k;
+
+		public static final class ByReference extends bpf_insn implements Structure.ByReference {
+		}
+
+		public bpf_insn() {
+		    setAutoSynch(false);
+		}
+
+		@Override
+		protected List<String> getFieldOrder() {
+		    return Arrays.asList("code","jt","jf","k");
+		}
+
+	}
+
 
 	public enum pcap_direction{
 		PCAP_D_INOUT((byte)0),

@@ -7,9 +7,10 @@ import java.nio.ByteOrder;
 
 import org.jcap.Core.Native.NativeWpcapMapping.in6_addr;
 import org.jcap.Core.Native.NativeWpcapMapping.in_addr;
+import com.sun.jna.NativeLong;
 
 /**
- * An util class for converting the Network addresses
+ * An utility class for converting the Network addresses
  * 
  * @author Ankit Bhattarai
  * 
@@ -32,6 +33,28 @@ public class InetConverter {
 			// TODO: handle exception
 			throw new AssertionError(e);
 		}
+	}
+
+	public static in_addr toIn_addr(Inet4Address inet4Addr) {
+		return toIn_addr(inet4Addr, ByteOrder.nativeOrder());
+	}
+
+	public static in_addr toIn_addr(Inet4Address inet4Addr, ByteOrder bo) {
+		if (inet4Addr == null)
+			return null;
+
+		byte[] bytes = inet4Addr.getAddress();
+
+		if (bo == ByteOrder.LITTLE_ENDIAN)
+			bytes = ByteOperations.reverse(bytes);// to convert from big endian to little
+		// endian.
+
+		int address = ByteOperations.getInt(bytes, 0);
+		in_addr in_Addr = new in_addr();
+		in_Addr.S_addr = new NativeLong(address);
+
+		return in_Addr;
+
 	}
 
 	public static Inet6Address toInet6Address(in6_addr in6Addr, int sin6_scope_id) {

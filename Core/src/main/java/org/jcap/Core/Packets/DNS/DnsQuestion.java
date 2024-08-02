@@ -8,17 +8,17 @@ import org.jcap.Core.Utils.ByteOperations;
  * Dns Question
  * 
  * <pre>
-*                                   1  1  1  1  1  1
-*    0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-*  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*  |                                               |
-*  /                     QNAME                     /
-*  /                                               /
-*  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*  |                     QTYPE                     |
-*  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*  |                     QCLASS                    |
-*  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *                                   1  1  1  1  1  1
+ *    0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+ *  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *  |                                               |
+ *  /                     QNAME                     /
+ *  /                                               /
+ *  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *  |                     QTYPE                     |
+ *  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *  |                     QCLASS                    |
+ *  +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
  * 
  * </pre>
  * 
@@ -134,6 +134,7 @@ public class DnsQuestion {
         public DnsQuestionBuilder questionName(DnsDomainName questionName) {
             if (sealed)
                 throw new UnsupportedOperationException("The field questionName cannot be initialized again");
+
             this.questionName = questionName;
             return this;
         }
@@ -148,6 +149,7 @@ public class DnsQuestion {
         public DnsQuestionBuilder questionType(DnsResourceRecordType questionType) {
             if (sealed)
                 throw new UnsupportedOperationException("The field questionType cannot be initialized again ");
+
             this.questionType = questionType;
             return this;
         }
@@ -162,6 +164,7 @@ public class DnsQuestion {
         public DnsQuestionBuilder questionClass(DnsClass questionClass) {
             if (sealed)
                 throw new UnsupportedOperationException("The field questionClass cannot be initialized again");
+
             this.questionClass = questionClass;
             return this;
         }
@@ -238,7 +241,7 @@ public class DnsQuestion {
 
     public String toString(String indent, byte[] headerRawData) {
         if (headerRawData == null) {
-            throw new NullPointerException("headerRawData is null.");
+            throw new IllegalArgumentException("headerRawData is null.");
         }
         return convertToString(indent, headerRawData);
     }
@@ -249,7 +252,7 @@ public class DnsQuestion {
 
         sb.append(indent)
                 .append("QNAME: ")
-                .append(headerRawData != null ? questionName : questionName)
+                .append(headerRawData == null ? questionName : questionName/* need to be changed */)
                 .append(ls)
                 .append(indent)
                 .append("QTYPE: ")

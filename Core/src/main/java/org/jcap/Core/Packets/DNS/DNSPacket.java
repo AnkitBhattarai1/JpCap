@@ -16,7 +16,7 @@ import org.jcap.Core.Utils.ByteOperations;
  * provide specific implementations for DNS packet structures.
  * 
  * <pre>
- *  +---------------------+
+ * +---------------------+
  *   |        Header       |
  *   +---------------------+
  *   |       Question      | the question for the name server

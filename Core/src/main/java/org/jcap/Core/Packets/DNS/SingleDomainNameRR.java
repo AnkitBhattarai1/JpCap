@@ -3,11 +3,13 @@ package org.jcap.Core.Packets.DNS;
 import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsResourceRecordType;
 import org.jcap.Core.Utils.ByteOperations;
 
-/*
+/**
+ * <pre>
  *    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    /                  DomainName                    /
-    /                                               /
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *   /                  DomainName                    /
+ *   /                                               /
+ *   +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ * </pre>
  */
 public class SingleDomainNameRR implements DnsRData {
 

@@ -1,4 +1,4 @@
-package org.jcap.Core.Packets.Transport_Layer;
+package org.jcap.Core.Packets.Transport;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,6 @@ import org.jcap.Core.Constants.NamedCodes.L4.Port;
 import org.jcap.Core.Constants.NamedCodes.L4.TcpOptionKind;
 import org.jcap.Core.Constants.NamedCodes.L4.TcpPort;
 import org.jcap.Core.Packets.Packet;
-import org.jcap.Core.Packets.RawPacket;
 import org.jcap.Core.Packets.Abstract_Layer_Packet.L4Packet.L4Header;
 import org.jcap.Core.Utils.ByteOperations;
 
@@ -86,7 +85,8 @@ public class TcpPacket implements Packet {
         private TcpPacketBuilder(byte[] rawData, int offset, int len) {
             ByteOperations.validate(rawData, offset, len);
             this.header = TcpHeader.builder(rawData, offset, len).build();
-            this.playLoad = RawPacket.Builder(rawData, offset + header.length(), len).build();
+            // this.playLoad = RawPacket.Builder(rawData, offset + header.length(),
+            // len).build();
 
             // TODO Implementation is to be done
             this.sealed = true;

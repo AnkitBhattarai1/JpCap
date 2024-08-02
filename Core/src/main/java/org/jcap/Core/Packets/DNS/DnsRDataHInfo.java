@@ -109,8 +109,10 @@ public class DnsRDataHInfo implements DnsRData {
         public DnsRDataHInfoBuilder OS(String os) {
             if (sealed)
                 throw new UnsupportedOperationException("Cannot change the field os once  made from byte data");
+
             if (os.length() > 255)
                 throw new IllegalArgumentException("The length of the os cannot be more than 256");
+
             this.os = os;
             return this;
         }
@@ -127,8 +129,10 @@ public class DnsRDataHInfo implements DnsRData {
         public DnsRDataHInfoBuilder cpu(String cpu) {
             if (sealed)
                 throw new UnsupportedOperationException("Cannot change the field os once  made from byte data");
-            if (os.length() > 255)
+
+            if (cpu.length() > 255)
                 throw new IllegalArgumentException("The length of the os cannot be more than 256");
+
             this.cpu = cpu;
 
             return this;

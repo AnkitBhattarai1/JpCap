@@ -32,6 +32,15 @@ public class EtherType extends NamedCode<Short, EtherType> {
         this.desc = desc;
     }
 
+    public Class<? extends L3Packet> getPacketClass() {
+        return clazz;
+    }
+
+    public String getDescription() {
+        return desc;
+
+    }
+
     public static final EtherType IPv4 = new EtherType((short) 0x0800, "IPv4", "IPv4", IpV4Packet.class);
     public static final EtherType ARP = new EtherType((short) 0x0806, "ARP", "ARP", null);
     public static final EtherType WOL = new EtherType((short) 0x0842, "WOL", "Wake-on-LAN", null);

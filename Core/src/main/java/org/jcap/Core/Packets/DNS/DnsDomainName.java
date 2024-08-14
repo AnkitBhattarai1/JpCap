@@ -256,6 +256,7 @@ public class DnsDomainName {
      * @return the length of the domain name in bytes
      */
     public int length() {
+
         int len = 0;
         for (String label : labels) {
             len += label.length() + 1;
@@ -276,6 +277,7 @@ public class DnsDomainName {
     public byte[] getRawData() {
         byte[] data = new byte[length()];
         int cursor = 0;
+
         for (String label : labels) {
             byte[] labelBytes = label.getBytes();
             data[cursor] = (byte) labelBytes.length;
@@ -283,6 +285,7 @@ public class DnsDomainName {
             System.arraycopy(labelBytes, 0, data, cursor, labelBytes.length);
             cursor += labelBytes.length;
         }
+
         if (pointer != null) {
             byte[] offsetBytes = ByteOperations.getByteArray(pointer);
             offsetBytes[0] |= 0xC0;
@@ -293,12 +296,14 @@ public class DnsDomainName {
 
     @Override
     public String toString() {
+
         if (labels.size() == 0 && pointer == null) {
             return "<ROOT>";
         }
 
         if (pointer == null) {
             return name;
+
         } else {
             StringBuilder sb = new StringBuilder();
             sb.append("[name: ").append(name).append(", pointer: ").append(pointer).append("]");

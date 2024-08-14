@@ -23,5 +23,9 @@ public interface Packet {
 		public int length();
 
 		public byte[] getRawData();
+
+		public static interface HeaderBuilder {
+			public Header build();
+		}
 	}
 }

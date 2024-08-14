@@ -1,6 +1,7 @@
 package org.jcap.Core.Enums;
 
 public enum LinkLayerType {
+
     DLT_NULL(0), // BSD loopback encapsulation
     DLT_EN10MB(1), // Ethernet (10Mb)
     DLT_EN3MB(2), // Experimental Ethernet (3Mb)

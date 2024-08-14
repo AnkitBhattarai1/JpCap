@@ -3,8 +3,7 @@ package org.jcap.Core.Packets.DNS;
 import java.net.Inet4Address;
 import java.nio.ByteOrder;
 
-import org.jcap.Core.Constants.NamedCodes.L3.IpNumber;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jcap.Core.Constants.NamedCodes.L3.ProcNumber;
 import org.jcap.Core.Utils.InetConverter;
 
 /**
@@ -30,7 +29,7 @@ import org.jcap.Core.Utils.InetConverter;
  * </pre>
  */
 
-public record DnsRDataWks(Inet4Address address, IpNumber protocol, byte[] bitMap) implements DnsRData {
+public record DnsRDataWks(Inet4Address address, ProcNumber protocol, byte[] bitMap) implements DnsRData {
 
     public static DnsRDataWksBuilder Builder() {
         return new DnsRDataWksBuilder();
@@ -66,7 +65,7 @@ public record DnsRDataWks(Inet4Address address, IpNumber protocol, byte[] bitMap
 
     public static final class DnsRDataWksBuilder {
         private Inet4Address address;
-        private IpNumber protocol;
+        private ProcNumber protocol;
         private byte[] bitMap;
 
         private DnsRDataWksBuilder() {
@@ -99,7 +98,7 @@ public record DnsRDataWks(Inet4Address address, IpNumber protocol, byte[] bitMap
             return this;
         }
 
-        public DnsRDataWksBuilder protocol(IpNumber protocol) {
+        public DnsRDataWksBuilder protocol(ProcNumber protocol) {
             this.protocol = protocol;
             return this;
         }

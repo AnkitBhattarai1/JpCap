@@ -1,6 +1,7 @@
 package org.jcap.Core.Utils;
 
 import java.nio.ByteOrder;
+import java.util.regex.Pattern;
 
 import org.jcap.Core.Address.MacAddress;
 
@@ -16,6 +17,9 @@ public class ByteOperations {
 	private final static int BYTE_SIZE_IN_BYTES = 1;
 	private final static int BYTE_IN_BITS = 8;
 	private final static int SHORT_SIZE_IN_BYTES = 2;
+
+	private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+	private static final Pattern NO_SEPARATOR_HEX_STRING_PATTERN = Pattern.compile("\\A[0-9a-fA-F]*\\z");
 
 	/**
 	 * Reverses the provided byte array.
@@ -105,6 +109,10 @@ public class ByteOperations {
 					(byte) (value)
 			};
 
+	}
+
+	public static byte[] getByteArray(long value) {
+		return getByteArray(value, ByteOrder.BIG_ENDIAN);
 	}
 
 	/**
@@ -245,10 +253,7 @@ public class ByteOperations {
 					(0xFF & arr[offset + 3] << BYTE_IN_BITS * 3) |
 					(0xFF & arr[offset + 2] << BYTE_IN_BITS * 2) |
 					(0xFF & arr[offset + 1] << BYTE_IN_BITS * 1) |
-					(0xFF & arr[offset])
-
-			);
-
+					(0xFF & arr[offset]));
 		else
 			return (long) ((arr[offset] << BYTE_IN_BITS * 7) |
 					(0xFF & arr[offset + 1] << BYTE_IN_BITS * 6) |
@@ -321,4 +326,120 @@ public class ByteOperations {
 	public static MacAddress getMacAddress(byte[] array, int offset, ByteOrder bo) {
 		return null;
 	}
+
+	public static String toHexString(short value, String separator) {
+		byte[] x = getByteArray(value);
+		return toHexString(x, separator, 0, x.length);
+	}
+
+	public static String toHexString(short value, String separator, ByteOrder bo) {
+		byte[] x = getByteArray(value, bo);
+		return toHexString(x, separator, 0, x.length);
+	}
+
+	public static String toHexString(int value, String separator) {
+		byte[] x = getByteArray(value);
+		return toHexString(x, separator, 0, x.length);
+
+	}
+
+	public static String toHexString(int value, String separator, ByteOrder bo) {
+		var x = getByteArray(value, bo);
+		return toHexString(x, separator, 0, x.length);
+	}
+
+	public static String toHexString(long value, String separator) {
+		var x = getByteArray(value);
+		return toHexString(x, separator, 0, x.length);
+	}
+
+	public static String toHexString(long value, String separator, ByteOrder bo) {
+		var x = getByteArray(value, bo);
+		return toHexString(x, separator, 0, x.length);
+	}
+
+	/**
+	 * Converts a specified range of a byte array to a hexadecimal string
+	 * representation,
+	 * with an optional separator between each byte's hexadecimal representation.
+	 *
+	 * @param array     The byte array to convert.
+	 * @param separator The string to insert between each pair of hexadecimal
+	 *                  characters. Can be empty.
+	 * @param offset    The starting position in the array to begin conversion.
+	 * @param length    The number of bytes to convert starting from the offset.
+	 * @return A string containing the hexadecimal representation of the specified
+	 *         byte array range,
+	 *         with the specified separator between each byte's hexadecimal
+	 *         representation.
+	 * @throws ArrayIndexOutOfBoundsException if the offset or length are out of
+	 *                                        bounds of the byte array.
+	 */
+	public static String toHexString(byte[] array, String separator, int offset, int length) {
+
+		final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+		validate(array, offset, length);
+
+		// Calculate the length of the resulting StringBuilder
+		int separatorLength = separator.length();
+		int resultLength = length * 2 + (length - 1) * separatorLength;
+		StringBuilder hexString = new StringBuilder(resultLength);
+
+		for (int i = 0; i < length; i++) {
+
+			if (i > 0 && separatorLength > 0) {
+				hexString.append(separator);
+			}
+
+			int v = array[offset + i] & 0x00FF;
+			System.out.println(v);
+			hexString.append(HEX_CHARS[v >>> 4]);
+			// System.out.println(HEX_CHARS[v >>> 4]);
+			hexString.append(HEX_CHARS[v & 0x0F]);
+			// System.out.println(HEX_CHARS[v & 0x0F]);
+		}
+
+		return hexString.toString();
+	}
+
+	public static byte[] getByteArray(String hexString, String separator) {
+		if (hexString == null || separator == null)
+			throw new NullPointerException("hexString " + hexString + "separator " + separator);
+
+		if (hexString.startsWith("0x"))
+			hexString = hexString.substring(2);
+
+		String noSeparatorHexString = hexString;
+
+		if (!separator.isEmpty()) {
+			StringBuilder patternSb = new StringBuilder("\\A[0-9a-fA-F]{2}(")
+					.append(Pattern.quote(separator))
+					.append("[0-9a-fA-F]{2})*\\z");
+
+			String patternString = patternSb.toString();
+
+			if (!Pattern.compile(patternString).matcher(hexString).matches()) {
+				throw new IllegalArgumentException(
+						"Invalid hex string (" + hexString + "), does not match pattern (" + patternString + ")");
+			}
+			noSeparatorHexString = hexString.replace(separator, "");
+			// System.out.println(noSeparatorHexString);
+		} else {
+
+			if (!NO_SEPARATOR_HEX_STRING_PATTERN.matcher(hexString).matches()) {
+				throw new IllegalArgumentException("Invalid hex string (" + hexString + "), does not match pattern ("
+						+ NO_SEPARATOR_HEX_STRING_PATTERN.pattern() + ")");
+			}
+		}
+
+		int arrayLength = noSeparatorHexString.length() / 2;
+
+		byte[] array = new byte[arrayLength];
+		for (int i = 0; i < arrayLength; i++) {
+			array[i] = (byte) Integer.parseInt(noSeparatorHexString.substring(i * 2, i * 2 + 2), 16);
+		}
+
+		return array;
+	}
+
 }

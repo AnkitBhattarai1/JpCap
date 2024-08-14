@@ -11,11 +11,8 @@ import static org.jcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_loop;
 import static org.jcap.Core.Native.NativeWpcapMapping.pcap_setfilter;
 
-import java.io.File;
 import java.net.Inet4Address;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import org.jcap.Core.JpCap;
 import org.jcap.Core.Enums.LinkLayerType;

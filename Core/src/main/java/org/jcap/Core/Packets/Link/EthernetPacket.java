@@ -9,6 +9,9 @@ import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
 import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet.L3PacketBuilder;
 import org.jcap.Core.Utils.ByteOperations;
 
+/**
+ * This class represents an Ethernet packet.
+ */
 public class EthernetPacket
         implements L2Packet {
 
@@ -16,12 +19,22 @@ public class EthernetPacket
     Packet playload;
     private final byte[] pad;
 
+    /**
+     * Private constructor for EthernetPacket.
+     *
+     * @param builder the builder used to create the EthernetPacket
+     */
     private EthernetPacket(EthernetPacketBuilder builder) {
         this.header = builder.ethHeader;
         this.playload = builder.payload;
         this.pad = builder.pad;
     }
 
+    /**
+     * Returns the length of the Ethernet packet.
+     *
+     * @return the length of the Ethernet packet
+     */
     @Override
     public int length() {
         int len = 0;
@@ -35,6 +48,11 @@ public class EthernetPacket
         return len;
     }
 
+    /**
+     * Returns the raw data of the Ethernet packet.
+     *
+     * @return the raw data of the Ethernet packet
+     */
     @Override
     public byte[] getRawData() {
         byte[] rawDAta = new byte[length()];
@@ -50,16 +68,31 @@ public class EthernetPacket
         return rawDAta;
     }
 
+    /**
+     * Returns the Ethernet header of the packet.
+     *
+     * @return the Ethernet header of the packet
+     */
     @Override
     public L2Header getHeader() {
         return header;
     }
 
+    /**
+     * Returns the payload of the Ethernet packet.
+     *
+     * @return the payload of the Ethernet packet
+     */
     @Override
     public Packet getPlayLoad() {
         return playload;
     }
 
+    /**
+     * Returns the pad bytes of the Ethernet packet.
+     *
+     * @return the pad bytes of the Ethernet packet
+     */
     public byte[] getPad() {
         return pad;
     }
@@ -76,14 +109,30 @@ public class EthernetPacket
         throw new UnsupportedOperationException("Unimplemented method 'containsPacketOf'");
     }
 
+    /**
+     * Creates a new EthernetPacketBuilder from raw data.
+     *
+     * @param rawData the raw data
+     * @param offset  the offset to start reading from
+     * @param len     the length of the data to read
+     * @return a new EthernetPacketBuilder
+     */
     public static EthernetPacketBuilder Builder(byte[] rawData, int offset, int len) {
         return new EthernetPacketBuilder(rawData, offset, len);
     }
 
+    /**
+     * Creates a new EthernetPacketBuilder.
+     *
+     * @return a new EthernetPacketBuilder
+     */
     public static EthernetPacketBuilder Builder() {
         return new EthernetPacketBuilder();
     }
 
+    /**
+     * Builder class for creating EthernetPacket instances.
+     */
     public static final class EthernetPacketBuilder implements L2PacketBuilder {
 
         private EthernetHeader ethHeader;
@@ -208,8 +257,49 @@ public class EthernetPacket
         }
 
         private void validate() {
-            // TOdo validation is to be done.....;
+            if (ethHeader == null) {
+                throw new IllegalStateException("Ethernet header cannot be null");
+            }
+
+            if (ethHeader.getEtherType().getValue() <= EtherType.IEEE802_3_MAX_LENGTH) {
+                int payloadLength = ethHeader.getEtherType().getValue();
+                if (payloadLength != 0 && payload == null) {
+                    throw new IllegalStateException("Payload is required for the given EtherType length");
+                }
+                if (payload != null && payload.length() != payloadLength) {
+                    throw new IllegalStateException("Payload length does not match the EtherType length field");
+                }
+            } else {
+                if (payload == null) {
+                    throw new IllegalStateException("Payload cannot be null for non-length EtherType");
+                }
+                if (payload.length() == 0) {
+                    throw new IllegalStateException("Payload length cannot be zero for non-length EtherType");
+                }
+            }
+
+            if (pad == null) {
+                throw new IllegalStateException("Pad cannot be null");
+            }
+
+            int totalLength = ethHeader.length() + (payload != null ? payload.length() : 0) + pad.length;
+
+            int expectedPadLength = ethHeader.getEtherType().getValue() <= EtherType.IEEE802_3_MAX_LENGTH
+                    ? totalLength - ethHeader.length() - (payload != null ? payload.length() : 0)
+                    : totalLength - ethHeader.length() - (payload != null ? payload.length() : 0);
+
+            if (pad.length != expectedPadLength) {
+                throw new IllegalStateException("Pad length does not match the expected length");
+            }
+
+            if (totalLength > 1500) { // Standard Ethernet frame size
+                throw new IllegalStateException("Ethernet frame length exceeds the maximum allowed size");
+            }
+
+            if (ethHeader.getEtherType().getClass() != payload.getClass())
+                throw new IllegalStateException("Payload type does not match the EtherType");
         }
+
     }
 
     public static class EthernetHeader implements L2Header {
@@ -299,6 +389,7 @@ public class EthernetPacket
                             "Cannot re initialize the dst addr once it is initialized by using the rawData");
 
                 this.dstAddress = dstAddress;
+
                 return this;
             }
 
@@ -325,7 +416,12 @@ public class EthernetPacket
             }
 
             private void validate() {
-                // TOdo Validation is to be done....
+                if (srcAddress == null || dstAddress == null || etherType == null)
+                    throw new IllegalArgumentException((srcAddress == null ? "srcAddress" : "dstAddress") + " or "
+                            + (etherType == null ? "etherType" : "etherType") + " is null");
+
+                if (srcAddress.equals(dstAddress))
+                    throw new IllegalArgumentException("The source destination cannot be same as destination Address");
             }
 
         }

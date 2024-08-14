@@ -1,4 +1,4 @@
-package org.jpcap;
+package org.jpcap.example;
 
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;

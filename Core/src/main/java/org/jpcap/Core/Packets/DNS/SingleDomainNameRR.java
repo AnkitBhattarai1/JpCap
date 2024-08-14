@@ -1,7 +1,7 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
-import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsResourceRecordType;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Constants.NamedCodes.DnsCodes.DnsResourceRecordType;
+import org.jpcap.Core.Utils.ByteOperations;
 
 /**
  * <pre>

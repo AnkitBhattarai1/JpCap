@@ -1,4 +1,4 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 public interface DnsRData {
 

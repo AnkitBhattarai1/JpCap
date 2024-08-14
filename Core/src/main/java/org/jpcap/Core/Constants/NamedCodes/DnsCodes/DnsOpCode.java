@@ -1,9 +1,9 @@
-package org.jcap.Core.Constants.NamedCodes.DnsCodes;
+package org.jpcap.Core.Constants.NamedCodes.DnsCodes;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
 
 public final class DnsOpCode extends NamedCode<Byte, DnsOpCode> {
 

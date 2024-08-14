@@ -1,11 +1,11 @@
-package org.jcap.Core.Address;
+package org.jpcap.Core.Address;
 
 import java.net.InetAddress;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_addr;
-import org.jcap.Core.Native.NativeWpcapMapping.soc_addr;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_addr;
+import org.jpcap.Core.Native.NativeWpcapMapping.soc_addr;
 
 public abstract class JpCapAbstractAddress implements JpCapAddress {
 

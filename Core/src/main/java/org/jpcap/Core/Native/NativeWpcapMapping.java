@@ -1,4 +1,4 @@
-package org.jcap.Core.Native;
+package org.jpcap.Core.Native;
 
 import java.nio.ByteOrder;
 import java.util.ArrayList;

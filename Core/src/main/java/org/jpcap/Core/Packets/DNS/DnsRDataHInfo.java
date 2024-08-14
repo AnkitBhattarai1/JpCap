@@ -1,4 +1,4 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 /**
  * Represents the RDATA section for DNS HINFO records containing information

@@ -1,12 +1,12 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsOpCode;
-import org.jcap.Core.Constants.NamedCodes.DnsCodes.DnsRCode;
-import org.jcap.Core.Packets.Packet;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Constants.NamedCodes.DnsCodes.DnsOpCode;
+import org.jpcap.Core.Constants.NamedCodes.DnsCodes.DnsRCode;
+import org.jpcap.Core.Packets.Packet;
+import org.jpcap.Core.Utils.ByteOperations;
 
 /**
  * Represents a DNS packet that includes a {@link DNSHeader},

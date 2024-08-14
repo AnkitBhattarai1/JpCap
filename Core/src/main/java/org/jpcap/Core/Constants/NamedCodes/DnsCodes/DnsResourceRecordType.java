@@ -1,19 +1,19 @@
-package org.jcap.Core.Constants.NamedCodes.DnsCodes;
+package org.jpcap.Core.Constants.NamedCodes.DnsCodes;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
-import org.jcap.Core.Packets.DNS.DnsRData;
-import org.jcap.Core.Packets.DNS.DnsRDataA;
-import org.jcap.Core.Packets.DNS.DnsRDataHInfo;
-import org.jcap.Core.Packets.DNS.DnsRDataMInfo;
-import org.jcap.Core.Packets.DNS.DnsRDataNull;
-import org.jcap.Core.Packets.DNS.DnsRDataSoa;
-import org.jcap.Core.Packets.DNS.DnsRDataTxt;
-import org.jcap.Core.Packets.DNS.DnsRDataWks;
-import org.jcap.Core.Packets.DNS.DnsRMXData;
-import org.jcap.Core.Packets.DNS.SingleDomainNameRR;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Packets.DNS.DnsRData;
+import org.jpcap.Core.Packets.DNS.DnsRDataA;
+import org.jpcap.Core.Packets.DNS.DnsRDataHInfo;
+import org.jpcap.Core.Packets.DNS.DnsRDataMInfo;
+import org.jpcap.Core.Packets.DNS.DnsRDataNull;
+import org.jpcap.Core.Packets.DNS.DnsRDataSoa;
+import org.jpcap.Core.Packets.DNS.DnsRDataTxt;
+import org.jpcap.Core.Packets.DNS.DnsRDataWks;
+import org.jpcap.Core.Packets.DNS.DnsRMXData;
+import org.jpcap.Core.Packets.DNS.SingleDomainNameRR;
 
 public class DnsResourceRecordType extends NamedCode<Short, DnsResourceRecordType> {
 

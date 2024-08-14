@@ -1,22 +1,23 @@
-package org.jcap.Core;
+package org.jpcap.Core;
+
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_findalldevs;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_loop;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_next_ex;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_open;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_open_live;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import org.jcap.Core.Interfaces.JpCapNetworkInterface;
+import org.jpcap.Core.Interfaces.JpCapNetworkInterface;
+import org.jpcap.Core.Native.NativeWpcapMapping.PcapErrbuf;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_handler;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_if;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
-import org.jcap.Core.Native.NativeWpcapMapping.PcapErrbuf;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_handler;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_if;
-
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_findalldevs;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_loop;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_next_ex;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_open;
 
 public class JpCap {
 
@@ -60,7 +61,7 @@ public class JpCap {
 	 */
 	public static Pointer openInterface(String name) {
 		PcapErrbuf err = new PcapErrbuf();
-		Pointer p = pcap_open(name, 65536, 1, 1000, null, err);
+		Pointer p = pcap_open_live(name, 65536, 1, 1000, null, err);
 
 		if (p == null)
 			throw new RuntimeException(err.toString());// Custom exception is to be

@@ -1,7 +1,7 @@
-package org.jcap.Core.Native;
+package org.jpcap.Core.Native;
 
-import org.jcap.Core.Native.NativeWpcapMapping.bpf_program;
-import org.jcap.Core.Packets.Packet;
+import org.jpcap.Core.Native.NativeWpcapMapping.bpf_program;
+import org.jpcap.Core.Packets.Packet;
 
 public class BpfProgram {
 

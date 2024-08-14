@@ -1,13 +1,13 @@
-package org.jcap.Core.Packets.Link;
+package org.jpcap.Core.Packets.Link;
 
-import org.jcap.Core.Address.LinkLayerAddress;
-import org.jcap.Core.Address.MacAddress;
-import org.jcap.Core.Constants.NamedCodes.L2.EtherType;
-import org.jcap.Core.Packets.Packet;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L2Packet;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet.L3PacketBuilder;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Address.LinkLayerAddress;
+import org.jpcap.Core.Address.MacAddress;
+import org.jpcap.Core.Constants.NamedCodes.L2.EtherType;
+import org.jpcap.Core.Packets.Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L2Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet.L3PacketBuilder;
+import org.jpcap.Core.Utils.ByteOperations;
 
 /**
  * This class represents an Ethernet packet.

@@ -1,6 +1,6 @@
-package org.jcap.Core.Constants.NamedCodes.L3;
+package org.jpcap.Core.Constants.NamedCodes.L3;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
 
 /**
  * * @see <a href=

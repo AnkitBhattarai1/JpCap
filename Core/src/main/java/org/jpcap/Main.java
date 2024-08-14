@@ -1,4 +1,4 @@
-package org.jcap;
+package org.jpcap;
 
 public class Main {
     public static void main(String[] args) {

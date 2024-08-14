@@ -1,11 +1,11 @@
-package org.jcap.Core.Address;
+package org.jpcap.Core.Address;
 
 import java.net.InetAddress;
 
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_addr;
-import org.jcap.Core.Native.NativeWpcapMapping.soc_addr;
-import org.jcap.Core.Native.NativeWpcapMapping.sockaddr_in;
-import org.jcap.Core.Utils.InetConverter;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_addr;
+import org.jpcap.Core.Native.NativeWpcapMapping.soc_addr;
+import org.jpcap.Core.Native.NativeWpcapMapping.sockaddr_in;
+import org.jpcap.Core.Utils.InetConverter;
 
 /**
  * Represents an IPv4 address associated with a network interface, extending the

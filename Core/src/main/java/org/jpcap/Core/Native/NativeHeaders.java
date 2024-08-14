@@ -1,10 +1,12 @@
-package org.jcap.Core.Native;
+package org.jpcap.Core.Native;
 
 import java.util.Arrays;
 import java.util.List;
+
+import org.jpcap.Core.Native.NativeWpcapMapping.in_addr;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
-import org.jcap.Core.Native.NativeWpcapMapping.in_addr;
 
 public class NativeHeaders {
 

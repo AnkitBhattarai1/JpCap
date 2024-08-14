@@ -3,25 +3,24 @@ package org.jpcap.example;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
-import org.jcap.Core.Utils.InetConverter;
-
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_compile;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_datalink;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_loop;
-import static org.jcap.Core.Native.NativeWpcapMapping.pcap_setfilter;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_compile;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_datalink;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_loop;
+import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_setfilter;
 
 import java.net.Inet4Address;
 import java.util.List;
 
-import org.jcap.Core.JpCap;
-import org.jcap.Core.Enums.LinkLayerType;
-import org.jcap.Core.Interfaces.JpCapNetworkInterface;
-import org.jcap.Core.Native.NativeHeaders.ip_header;
-import org.jcap.Core.Native.NativeWpcapMapping.bpf_program;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_handler;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_pkthdr;
-import org.jcap.Core.Packets.Network.IpV4Packet;
+import org.jpcap.Core.JpCap;
+import org.jpcap.Core.Enums.LinkLayerType;
+import org.jpcap.Core.Interfaces.JpCapNetworkInterface;
+import org.jpcap.Core.Native.NativeHeaders.ip_header;
+import org.jpcap.Core.Native.NativeWpcapMapping.bpf_program;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_handler;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_pkthdr;
+import org.jpcap.Core.Packets.Network.IpV4Packet;
+import org.jpcap.Core.Utils.InetConverter;
 
 public class Main {
     public static void main(String[] args) {

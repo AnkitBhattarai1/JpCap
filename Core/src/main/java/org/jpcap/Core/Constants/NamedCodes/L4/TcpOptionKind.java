@@ -1,6 +1,6 @@
-package org.jcap.Core.Constants.NamedCodes.L4;
+package org.jpcap.Core.Constants.NamedCodes.L4;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
 
 public class TcpOptionKind extends NamedCode<Byte, TcpOptionKind> {
 

@@ -1,8 +1,8 @@
-package org.jcap.Core.Address;
+package org.jpcap.Core.Address;
 
 import java.util.regex.Pattern;
 
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Utils.ByteOperations;
 
 public class LinkLayerAddress {
 

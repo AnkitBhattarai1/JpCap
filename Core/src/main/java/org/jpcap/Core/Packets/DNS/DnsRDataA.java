@@ -1,11 +1,11 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
-import org.jcap.Core.Utils.ByteOperations;
-import org.jcap.Core.Utils.InetConverter;
+import org.jpcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Utils.InetConverter;
 
 /**
  * 

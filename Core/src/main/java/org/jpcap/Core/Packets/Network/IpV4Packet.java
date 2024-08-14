@@ -1,13 +1,13 @@
-package org.jcap.Core.Packets.Network;
+package org.jpcap.Core.Packets.Network;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
 
-import org.jcap.Core.Constants.NamedCodes.L3.IpVersion;
-import org.jcap.Core.Constants.NamedCodes.L3.ProcNumber;
-import org.jcap.Core.Packets.Packet;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Constants.NamedCodes.L3.IpVersion;
+import org.jpcap.Core.Constants.NamedCodes.L3.ProcNumber;
+import org.jpcap.Core.Packets.Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
+import org.jpcap.Core.Utils.ByteOperations;
 
 public class IpV4Packet implements L3Packet {
 

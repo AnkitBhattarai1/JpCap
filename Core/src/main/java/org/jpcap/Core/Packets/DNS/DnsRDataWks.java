@@ -1,10 +1,10 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 import java.net.Inet4Address;
 import java.nio.ByteOrder;
 
-import org.jcap.Core.Constants.NamedCodes.L3.ProcNumber;
-import org.jcap.Core.Utils.InetConverter;
+import org.jpcap.Core.Constants.NamedCodes.L3.ProcNumber;
+import org.jpcap.Core.Utils.InetConverter;
 
 /**
  * <pre>

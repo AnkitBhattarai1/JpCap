@@ -1,9 +1,9 @@
-package org.jcap.Core.Address;
+package org.jpcap.Core.Address;
 
 import java.nio.ByteOrder;
 
-import org.jcap.Core.Constants.NamedCodes.L2.Oui;
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Constants.NamedCodes.L2.Oui;
+import org.jpcap.Core.Utils.ByteOperations;
 
 /**
  * MacAddress

@@ -1,4 +1,4 @@
-package org.jcap.Core.Enums;
+package org.jpcap.Core.Enums;
 
 public enum LinkLayerType {
 

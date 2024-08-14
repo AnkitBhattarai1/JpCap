@@ -1,4 +1,4 @@
-package org.jcap.Core.Packets;
+package org.jpcap.Core.Packets;
 
 public interface Packet {
 

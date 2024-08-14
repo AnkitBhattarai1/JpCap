@@ -1,7 +1,7 @@
-package org.jcap.Core.Packets.Network;
+package org.jpcap.Core.Packets.Network;
 
-import org.jcap.Core.Packets.Packet;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
+import org.jpcap.Core.Packets.Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
 
 public class IpV6Packet implements L3Packet {
 

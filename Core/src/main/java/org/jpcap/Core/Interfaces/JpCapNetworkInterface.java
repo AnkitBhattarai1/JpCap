@@ -1,14 +1,14 @@
-package org.jcap.Core.Interfaces;
+package org.jpcap.Core.Interfaces;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jcap.Core.Address.Inets;
-import org.jcap.Core.Address.JpCapAddress;
-import org.jcap.Core.Address.JpCapIPv4Address;
-import org.jcap.Core.Address.JpCapIPv6Address;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_addr;
-import org.jcap.Core.Native.NativeWpcapMapping.pcap_if;
+import org.jpcap.Core.Address.Inets;
+import org.jpcap.Core.Address.JpCapAddress;
+import org.jpcap.Core.Address.JpCapIPv4Address;
+import org.jpcap.Core.Address.JpCapIPv6Address;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_addr;
+import org.jpcap.Core.Native.NativeWpcapMapping.pcap_if;
 
 public class JpCapNetworkInterface {
 

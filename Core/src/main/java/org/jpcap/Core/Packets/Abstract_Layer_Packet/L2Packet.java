@@ -1,7 +1,7 @@
-package org.jcap.Core.Packets.Abstract_Layer_Packet;
+package org.jpcap.Core.Packets.Abstract_Layer_Packet;
 
-import org.jcap.Core.Address.LinkLayerAddress;
-import org.jcap.Core.Packets.Packet;
+import org.jpcap.Core.Address.LinkLayerAddress;
+import org.jpcap.Core.Packets.Packet;
 
 public interface L2Packet extends Packet {
 

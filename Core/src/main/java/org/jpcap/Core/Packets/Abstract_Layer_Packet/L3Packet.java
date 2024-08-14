@@ -1,8 +1,8 @@
-package org.jcap.Core.Packets.Abstract_Layer_Packet;
+package org.jpcap.Core.Packets.Abstract_Layer_Packet;
 
 import java.net.InetAddress;
 
-import org.jcap.Core.Packets.Packet;
+import org.jpcap.Core.Packets.Packet;
 
 public interface L3Packet extends Packet {
 

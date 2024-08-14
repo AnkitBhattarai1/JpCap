@@ -1,4 +1,4 @@
-package org.jcap.Core.Constants.NamedCodes.L4;
+package org.jpcap.Core.Constants.NamedCodes.L4;
 
 public class TcpPort extends Port {
 

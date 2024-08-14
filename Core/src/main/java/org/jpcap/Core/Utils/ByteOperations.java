@@ -1,9 +1,9 @@
-package org.jcap.Core.Utils;
+package org.jpcap.Core.Utils;
 
 import java.nio.ByteOrder;
 import java.util.regex.Pattern;
 
-import org.jcap.Core.Address.MacAddress;
+import org.jpcap.Core.Address.MacAddress;
 
 /**
  * This class provides methods for performing byte-level operations,

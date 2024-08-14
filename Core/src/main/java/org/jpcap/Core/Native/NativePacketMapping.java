@@ -1,4 +1,4 @@
-package org.jcap.Core.Native;
+package org.jpcap.Core.Native;
 
 import com.sun.jna.Native;
 

@@ -1,4 +1,4 @@
-package org.jcap.Core.Address;
+package org.jpcap.Core.Address;
 
 import java.net.InetAddress;
 

@@ -1,4 +1,4 @@
-package org.jcap.Core.Constants.NamedCodes;
+package org.jpcap.Core.Constants.NamedCodes;
 
 public abstract class NamedCode<T extends Number, U extends NamedCode<T, ?>>
         implements Comparable<U> {

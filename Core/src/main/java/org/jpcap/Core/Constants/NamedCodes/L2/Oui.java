@@ -1,6 +1,6 @@
-package org.jcap.Core.Constants.NamedCodes.L2;
+package org.jpcap.Core.Constants.NamedCodes.L2;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
 
 public final class Oui extends NamedCode<Integer, Oui> {
 

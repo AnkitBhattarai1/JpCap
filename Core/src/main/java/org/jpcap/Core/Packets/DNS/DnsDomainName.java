@@ -1,10 +1,10 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Utils.ByteOperations;
 
 /*
  * Notes:

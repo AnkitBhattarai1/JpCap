@@ -1,12 +1,12 @@
-package org.jcap.Core.Constants.NamedCodes.L2;
+package org.jpcap.Core.Constants.NamedCodes.L2;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jcap.Core.Constants.NamedCodes.NamedCode;
-import org.jcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
-import org.jcap.Core.Packets.Network.IpV4Packet;
-import org.jcap.Core.Packets.Network.IpV6Packet;
+import org.jpcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
+import org.jpcap.Core.Packets.Network.IpV4Packet;
+import org.jpcap.Core.Packets.Network.IpV6Packet;
 
 /**
  * Represents the EtherType in the ethernet frame....

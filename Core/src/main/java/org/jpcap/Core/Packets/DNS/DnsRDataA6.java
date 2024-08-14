@@ -1,8 +1,8 @@
-package org.jcap.Core.Packets.DNS;
+package org.jpcap.Core.Packets.DNS;
 
 import java.net.Inet6Address;
 
-import org.jcap.Core.Utils.ByteOperations;
+import org.jpcap.Core.Utils.ByteOperations;
 
 public class DnsRDataA6 implements DnsRData {
     private final Inet6Address address;

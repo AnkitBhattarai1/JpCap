@@ -13,5 +13,24 @@
   <artifactId>Core</artifactId>
   <name>Core </name>
   <description>Core packages of JpCap</description>
-
-</project>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.jpcap.Core.Main</mainClass> <!-- Replace with your main class -->
+        </configuration>
+      </plugin>
+  </plugins>
+  </build>
+  <project>

@@ -41,9 +41,9 @@ public class JpCapNetworkInterface {
 	@Override
 	public String toString() {
 		return String.format("""
-					"Name: %s,
-					"description: %s,
-					"addresses: %s,
+				Name: %s
+				Description: %s
+				Addresses:%s
 				""", name, description, addresses);
 	}
 

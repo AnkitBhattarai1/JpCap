@@ -4,7 +4,6 @@ import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_findalldevs;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_loop;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_next_ex;
-import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_open;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_open_live;
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class JpCap {
 	 *         interfaces.
 	 * @throws RuntimeException if the devices cannot be found.
 	 */
+
 	public static List<JpCapNetworkInterface> findAllDevs() {
 		List<JpCapNetworkInterface> intf = new ArrayList<>();
 		PointerByReference alldevs = new PointerByReference();
@@ -60,12 +60,14 @@ public class JpCap {
 	 * @throws RuntimeException if the interface cannot be opened.
 	 */
 	public static Pointer openInterface(String name) {
+
+		System.out.println("Attempting to call " + name);
+
 		PcapErrbuf err = new PcapErrbuf();
-		Pointer p = pcap_open_live(name, 65536, 1, 1000, null, err);
+		Pointer p = pcap_open_live(name, 65536, 1, 1000, err);
 
 		if (p == null)
-			throw new RuntimeException(err.toString());// Custom exception is to be
-		// implemented....
+			throw new RuntimeException(err.toString());
 
 		return p;
 	}
@@ -77,9 +79,11 @@ public class JpCap {
 	 * @param onCapture a {@link BiConsumer} to handle captured packets.
 	 */
 	public static void capture(Pointer pcap, BiConsumer<PointerByReference, PointerByReference> onCapture) {
+
 		PointerByReference header = new PointerByReference();
 		PointerByReference packet = new PointerByReference();
 		int res;
+
 		while ((res = pcap_next_ex(pcap, header, packet)) >= 0) {
 			if (res == 0)
 				continue;

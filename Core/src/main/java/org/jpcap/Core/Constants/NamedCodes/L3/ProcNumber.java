@@ -1,8 +1,17 @@
 package org.jpcap.Core.Constants.NamedCodes.L3;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jpcap.Core.Constants.NamedCodes.NamedCode;
+import org.jpcap.Core.Constants.NamedCodes.DnsCodes.DnsClass;
 
 /**
+ * In the Internet Protocol version 4 (IPv4) [RFC791] there is a field
+ * called "Protocol" to identify the next level protocol. This is an 8
+ * bit field. In Internet Protocol version 6 (IPv6) [RFC8200], this field
+ * is called the "Next Header" field.
+ * 
  * * @see <a href=
  * "http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xml">IANA
  * Registry</a>
@@ -16,6 +25,8 @@ public class ProcNumber extends NamedCode<Byte, ProcNumber> {
         this.protocol = protocol;
         // TODO Auto-generated constructor stub
     }
+
+    private static final Map<Byte, ProcNumber> registry = new HashMap<>();
 
     /** IPv6 Hop-by-Hop Option: 0 */
     public static final ProcNumber IPV6_HOPOPT = new ProcNumber((byte) 0, "HOPOPT", "IPv6 Hop-by-Hop Option");
@@ -162,7 +173,8 @@ public class ProcNumber extends NamedCode<Byte, ProcNumber> {
 
     /** Generic Routing Encapsulation: 47 */
     public static final ProcNumber GRE = new ProcNumber((byte) 47, "GRE", "Generic Routing Encapsulation");
-
+    /**  */
+    public static final ProcNumber BNA = new ProcNumber((byte) 49, "BNA", "Berkeley Routing Daemon");
     /** Dynamic Source Routing Protocol: 48 */
     public static final ProcNumber DSR = new ProcNumber((byte) 48, "DSR", "Dynamic Source Routing Protocol");
 
@@ -441,8 +453,72 @@ public class ProcNumber extends NamedCode<Byte, ProcNumber> {
     /** Robust Header Compression: 142 */
     public static final ProcNumber ROHC = new ProcNumber((byte) 142, "ROHC", "Robust Header Compression");
 
+    static {
+        registry.put((byte) 0, IPV6_HOPOPT);
+        registry.put((byte) 1, ICMP);
+        registry.put((byte) 2, IGMP);
+        registry.put((byte) 3, GGP);
+        registry.put((byte) 4, IPV4);
+        registry.put((byte) 5, ST);
+        registry.put((byte) 6, TCP);
+        registry.put((byte) 7, CBT);
+        registry.put((byte) 8, EGP);
+        registry.put((byte) 9, IGP);
+        registry.put((byte) 10, BBN_RCC_MON);
+        registry.put((byte) 11, NVP_II);
+        registry.put((byte) 12, PUP);
+        registry.put((byte) 13, ARGUS);
+        registry.put((byte) 14, EMCON);
+        registry.put((byte) 15, XNET);
+        registry.put((byte) 16, CHAOS);
+        registry.put((byte) 17, UDP);
+        registry.put((byte) 18, MUX);
+        registry.put((byte) 19, DCN_MEAS);
+        registry.put((byte) 20, HMP);
+        registry.put((byte) 21, PRM);
+        registry.put((byte) 22, XNS_IDP);
+        registry.put((byte) 23, TRUNK_1);
+        registry.put((byte) 24, TRUNK_2);
+        registry.put((byte) 25, LEAF_1);
+        registry.put((byte) 26, LEAF_2);
+        registry.put((byte) 27, RDP);
+        registry.put((byte) 28, IRTP);
+        registry.put((byte) 29, ISO_TP4);
+        registry.put((byte) 30, NETBLT);
+        registry.put((byte) 31, MFE_NSP);
+        registry.put((byte) 32, MERIT_INP);
+        registry.put((byte) 33, DCCP);
+        registry.put((byte) 34, ThirdPC);
+        registry.put((byte) 35, IDPR);
+        registry.put((byte) 36, XTP);
+        registry.put((byte) 37, DDP);
+        registry.put((byte) 38, IDPR_CMTP);
+        registry.put((byte) 39, TP_PLUS_PLUS);
+        registry.put((byte) 40, IL);
+        registry.put((byte) 41, IPV6);
+        registry.put((byte) 42, SDRP);
+        registry.put((byte) 43, IPV6_ROUTE);
+        registry.put((byte) 44, IPV6_FRAG);
+        registry.put((byte) 45, IDRP);
+        registry.put((byte) 46, RSVP);
+        registry.put((byte) 47, GRE);
+        registry.put((byte) 48, DSR);
+        registry.put((byte) 49, BNA);
+
+    }
+
     String getProtocol() {
         return protocol;
+    }
+
+    public static ProcNumber getInstanceOfCode(byte procNumber) {
+
+        if (registry.containsKey(procNumber)) {
+            return registry.get(procNumber);
+
+        } else {
+            return new ProcNumber(procNumber, "Unknown ", "Not a known proc Number");
+        }
     }
 
     @Override

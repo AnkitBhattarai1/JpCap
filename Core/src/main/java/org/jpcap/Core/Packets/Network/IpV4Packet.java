@@ -184,13 +184,32 @@ public class IpV4Packet implements L3Packet {
                 int cursor = 0;
                 byte verIhl = ByteOperations.getByte(rawData, offset);
                 // version=IpVersion.getInstanceofCode();
-                ihl = (byte) (verIhl & 0x0F);
+                this.ihl = (byte) (verIhl & 0x0F);
                 cursor += Byte.BYTES;
                 /// get tos;
                 cursor += Byte.BYTES;
-                totalLen = ByteOperations.getShort(rawData, offset + cursor);
+
+                this.totalLen = ByteOperations.getShort(rawData, offset + cursor);
                 cursor += Short.BYTES;
 
+                this.iden = ByteOperations.getShort(rawData, offset + cursor);
+                cursor += Short.BYTES;
+
+                short flagsAndFragmentOffset = ByteOperations.getShort(rawData, offset + cursor);
+                cursor += Short.BYTES;
+
+                this.reservedFlags = (flagsAndFragmentOffset & 0x8000) != 0;
+                this.dontFragmentFlag = (flagsAndFragmentOffset & 0x4000) != 0;
+                this.moreFragmentFlag = (flagsAndFragmentOffset & 0x2000) != 0;
+                this.fragmentOffset = (short) (flagsAndFragmentOffset & 0x1FFF);
+
+                this.ttl = ByteOperations.getByte(rawData, offset + cursor);
+                cursor += Byte.BYTES;
+
+                this.proc = ProcNumber.getInstanceOfCode(ByteOperations.getByte(rawData, offset + cursor));
+                cursor += Byte.BYTES;
+
+                this.checksum = ByteOperations.getShort(rawData, offset + cursor);
                 // TODO to be implementedd...
             }
 

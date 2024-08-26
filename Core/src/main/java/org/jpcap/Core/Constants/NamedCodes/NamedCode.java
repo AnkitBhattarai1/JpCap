@@ -2,6 +2,7 @@ package org.jpcap.Core.Constants.NamedCodes;
 
 public abstract class NamedCode<T extends Number, U extends NamedCode<T, ?>>
         implements Comparable<U> {
+
     private final T value;
     private final String name;
 

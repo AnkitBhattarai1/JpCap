@@ -128,8 +128,12 @@ public abstract class JpCapAbstractAddress implements JpCapAddress {
 
 	@Override
 	public String toString() {
-		return "JpCapAbstractAddress [address=" + address + ", NetMask=" + NetMask + ", bordAddress=" + bordAddress
-				+ ", destAddress=" + destAddress + "]";
+		return String.format("""
+				address: %s
+				NetMask: %s
+				bordAddress: %s
+				destAddress: %s
+				""", address, NetMask, bordAddress, destAddress);
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public class NativeWpcapMapping {
 	//auth is the authentication to open the device in
 	//errbuf is the error buffer
 
-	public static native Pointer pcap_open_live(String device, int snaplen, int promisc, int to_ms, Pointer auth, PcapErrbuf errbuf);
+	public static native Pointer pcap_open_live(String device, int snaplen, int promisc, int to_ms, PcapErrbuf errbuf);
 
 	// linktype is the link layer type of the device
 	// snaplen is the maximum length of the packets to capture
@@ -107,7 +107,7 @@ public class NativeWpcapMapping {
 
 	//PCAP_API pcap_t	*pcap_open(const char *source, int snaplen, int flags,
 	//int read_timeout, struct pcap_rmtauth *auth, char *errbuf);
-	public static native Pointer pcap_open(String source,int snaplen, int promisc,int read_timeout,Pointer auth,PcapErrbuf errbuf);
+	//public static native Pointer pcap_open(String source,int snaplen, int promisc,int read_timeout,Pointer auth,PcapErrbuf errbuf);
 
 	//PCAP_AVAILABLE_0_4
 	//PCAP_API int	pcap_datalink(pcap_t *);
@@ -474,6 +474,8 @@ public class NativeWpcapMapping {
 		public byte[] buf = new byte[PCAP_ERRBUF_SIZE()];
 
 		public PcapErrbuf() {
+			super();
+			allocateMemory();
 		}
 
 		private static int PCAP_ERRBUF_SIZE() {

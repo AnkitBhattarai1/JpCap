@@ -1,6 +1,5 @@
 package org.jpcap.Core.Packets.Link;
 
-import org.jpcap.Core.Address.LinkLayerAddress;
 import org.jpcap.Core.Address.MacAddress;
 import org.jpcap.Core.Constants.NamedCodes.L2.EtherType;
 import org.jpcap.Core.Packets.Packet;
@@ -11,6 +10,19 @@ import org.jpcap.Core.Utils.ByteOperations;
 
 /**
  * This class represents an Ethernet packet.
+ * <pre>
+ * +-------------------------+
+ * |     Destination MAC      | 6 bytes
+ * +-------------------------+
+ * |      Source MAC          | 6 bytes
+ * +-------------------------+
+ * |   EtherType / Length     | 2 bytes
+ * +-------------------------+
+ * |        Payload           | 46-1500 bytes
+ * +-------------------------+
+ * |       Frame Check        | 4 bytes (CRC)
+ * +-------------------------+
+ * </pre>
  */
 public class EthernetPacket
         implements L2Packet {
@@ -304,8 +316,8 @@ public class EthernetPacket
 
     public static class EthernetHeader implements L2Header {
 
-        MacAddress dstAddress;
-        MacAddress srcAddress;
+        MacAddress dstAddress;/* destination Mac-Address of the packet */
+        MacAddress srcAddress;/*source Mac-Address of the packet */
         EtherType etherType;
 
         private EthernetHeader(EthernetHeaderBuilder builder) {
@@ -330,11 +342,12 @@ public class EthernetPacket
             return new EthernetHeaderBuilder(rawData, offset, len);
 
         }
-
-        public MacAddress getDstAddress() {
+        @Override
+        public MacAddress getDestAddress() {
             return dstAddress;
         }
 
+       @Override 
         public MacAddress getSrcAddress() {
             return srcAddress;
         }
@@ -346,7 +359,6 @@ public class EthernetPacket
         @Override
         public int length() {
             return EthernetHeader.ETHERNET_HEADER_SIZE;
-
         }
 
         @Override
@@ -361,7 +373,7 @@ public class EthernetPacket
             return rawData;
         }
 
-        public static final class EthernetHeaderBuilder {
+        public static final class EthernetHeaderBuilder implements HeaderBuilder{
 
             MacAddress dstAddress;
             MacAddress srcAddress;
@@ -372,6 +384,7 @@ public class EthernetPacket
             }
 
             private EthernetHeaderBuilder(byte[] rawData, int offset, int length) {
+        
                 if (length < ETHERNET_HEADER_SIZE)
                     throw new IllegalArgumentException("The data is too short to build an Ethernet Header");
 
@@ -380,7 +393,6 @@ public class EthernetPacket
                 this.etherType = EtherType.instanceOfCode(ByteOperations.getShort(rawData, offset + TYPE_OFFSET));
 
                 sealed = true;
-                // Todo Implementation is to be done....
             }
 
             public EthernetHeaderBuilder dstAddress(MacAddress dstAddress) {
@@ -410,7 +422,7 @@ public class EthernetPacket
                 this.etherType = etherType;
                 return this;
             }
-
+            @Override
             public EthernetHeader build() {
                 return new EthernetHeader(this);
             }
@@ -424,16 +436,6 @@ public class EthernetPacket
                     throw new IllegalArgumentException("The source destination cannot be same as destination Address");
             }
 
-        }
-
-        @Override
-        public LinkLayerAddress getsrcAddress() {
-            return srcAddress;
-        }
-
-        @Override
-        public LinkLayerAddress getDestAddress() {
-            return dstAddress;
         }
 
     }

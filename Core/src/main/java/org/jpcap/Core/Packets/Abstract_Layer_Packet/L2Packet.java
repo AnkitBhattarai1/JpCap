@@ -16,7 +16,7 @@ public interface L2Packet extends Packet {
 
     public static interface L2Header extends Header {
 
-        public LinkLayerAddress getsrcAddress();
+        public LinkLayerAddress getSrcAddress();
 
         public LinkLayerAddress getDestAddress();
     }

@@ -1,5 +1,6 @@
 package org.jpcap.Core.Packets.Network;
 
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.nio.ByteOrder;
@@ -53,7 +54,7 @@ public class IpV4Packet implements L3Packet {
 
         @Override
         public L3Packet build() {
-            // TODO Auto-generated method stub
+           // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'build'");
         }
 
@@ -106,7 +107,7 @@ public class IpV4Packet implements L3Packet {
 
         private final IpVersion version;
         private final byte ihl;
-         private final byte tos;
+        private final byte tos;
         private final short totalLen;
         private final short iden;
         private final boolean reservedFlag;
@@ -118,7 +119,7 @@ public class IpV4Packet implements L3Packet {
         private final short checksum;
         private final Inet4Address srcAddr;
         private final Inet4Address dstAddr;
-        private final List<IPv4Option> options;
+        private final List<IpV4Option> options;
         private final byte[] padding;
 
         private IpV4Header(IpV4HeaderBuilder builder) {
@@ -155,14 +156,12 @@ public class IpV4Packet implements L3Packet {
 
         @Override
         public InetAddress getSourceAddress() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getSourceAddress'");
+            return this.srcAddr;
         }
 
         @Override
         public InetAddress getDestinationAddress() {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'getDestinationAddress'");
+            return this.dstAddr;
         }
 
         public IpVersion getVersion(){
@@ -205,15 +204,7 @@ public class IpV4Packet implements L3Packet {
             return checksum;
         }
 
-        public Inet4Address getSrcAddr() {
-            return srcAddr;
-        }
-
-        public Inet4Address getDstAddr() {
-            return dstAddr;
-        }
-
-        public List<IPv4Option> getOptions() {
+        public List<IpV4Option> getOptions() {
             return options;
         }
 
@@ -245,7 +236,7 @@ public class IpV4Packet implements L3Packet {
             private short checksum;
             private Inet4Address srcAddr;
             private Inet4Address destAddr;
-            private List<IPv4Option> options;
+            private List<IpV4Option> options;
             private byte[] padding;
             
             private boolean sealed;
@@ -315,7 +306,8 @@ public class IpV4Packet implements L3Packet {
                     while(cursor <h_Len_bytes) {
                         // somethign need to be done here..... paxi aayyerwww garxuu laaa hehehehehehheh.....
                     }
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     //TODO: handle exception
                 }
 
@@ -324,13 +316,9 @@ public class IpV4Packet implements L3Packet {
                 if(padLen!=0) this.padding = ByteOperations.getSubArray(rawData,cursor+offset , padLen);
                 
                 else this.padding = new byte[0];
-                // TODO to implement the IpV4Options here......
+
             }
 
-            @Override
-            public IpV4Header build() {
-                return new IpV4Header(this);
-            }
 
 
             //Version
@@ -362,11 +350,65 @@ public class IpV4Packet implements L3Packet {
                 return this;
             }
             
-            public IpV4HeaderBuilder ReservedFlag(boolean b){
+            public IpV4HeaderBuilder Reserved(boolean b){
                 this.reservedFlags=b;
                 return this;
             }
+ 
+            public IpV4HeaderBuilder DontFragment(boolean b){
+            this.dontFragmentFlag=b;
+            return this;
+            
+            }
+
+            public IpV4HeaderBuilder Morefragment (boolean b){
+                this.moreFragmentFlag = b;
+                return this;
+            }
+
+            public IpV4HeaderBuilder FragementOffset(short s){
+                this.fragmentOffset = s;
+                return this;
+            }
+
+            public IpV4HeaderBuilder TTL(byte b){
+                this.ttl=b;
+                return this;
+            }
+
+            public IpV4HeaderBuilder ProtocolNumber(ProcNumber proc){
+                this.proc = proc;
+                return this;
+            }
+
+            public IpV4HeaderBuilder checksum (short cs){
+                this.checksum = cs;
+                return this;
+            }
+
+            public IpV4HeaderBuilder srcAddress (Inet4Address add){
+             
+                this.srcAddr = add;
+                return this;
+            }
+
+            public IpV4HeaderBuilder destAddress(Inet4Address dest){
+                this.destAddr =  dest;
+                return this;
+            }
+
+            public IpV4HeaderBuilder options(List<IpV4Option> options){
+                this.options=options;
+                return this;
+            }
+
+            @Override
+            public IpV4Header build() {
+                return new IpV4Header(this);
+            }
+
         }
+
         
     }
 

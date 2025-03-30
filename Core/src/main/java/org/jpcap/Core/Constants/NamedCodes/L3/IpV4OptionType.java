@@ -68,11 +68,19 @@ public final class IpV4OptionType extends NamedCode<Byte, IpV4OptionType> {
 
     private final boolean copied;
     private final byte number;
+    Class<? extends IpV4Option> clazz;
 
+    
     protected IpV4OptionType(Byte value, String name, Class<? extends IpV4Option> clazz) {
         super(value, name);
+        this.clazz=clazz;
         this.copied = (value & 0x80) != 0;
         this.number = (byte) (value & 0x1F);
+    }
+    
+    public Class<? extends IpV4Option> getClazz()
+    {
+        return clazz;
     }
 
     public boolean isCopied() {

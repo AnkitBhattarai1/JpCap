@@ -18,7 +18,6 @@ public class ByteOperations {
 	private final static int BYTE_IN_BITS = 8;
 	private final static int SHORT_SIZE_IN_BYTES = 2;
 
-	private static final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
 	private static final Pattern NO_SEPARATOR_HEX_STRING_PATTERN = Pattern.compile("\\A[0-9a-fA-F]*\\z");
 
 	/**
@@ -126,24 +125,24 @@ public class ByteOperations {
 		if (bo.equals(ByteOrder.LITTLE_ENDIAN))
 			return new byte[] {
 					(byte) (value),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 1),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 2),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 3),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 4),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 5),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 6),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 7),
+					(byte) (value >> BYTE_IN_BITS * 1),
+					(byte) (value >> BYTE_IN_BITS * 2),
+					(byte) (value >> BYTE_IN_BITS * 3),
+					(byte) (value >> BYTE_IN_BITS * 4),
+					(byte) (value >> BYTE_IN_BITS * 5),
+					(byte) (value >> BYTE_IN_BITS * 6),
+					(byte) (value >> BYTE_IN_BITS* 7),
 			};
 
 		else
 			return new byte[] {
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 7),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 6),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 5),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 4),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 3),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 2),
-					(byte) (value >> BYTE_SIZE_IN_BYTES * 1),
+					(byte) (value >> BYTE_IN_BITS * 7),
+					(byte) (value >> BYTE_IN_BITS * 6),
+					(byte) (value >> BYTE_IN_BITS* 5),
+					(byte) (value >> BYTE_IN_BITS* 4),
+					(byte) (value >> BYTE_IN_BITS* 3),
+					(byte) (value >> BYTE_IN_BITS* 2),
+					(byte) (value >> BYTE_IN_BITS* 1),
 					(byte) (value)
 			};
 	}
@@ -392,7 +391,7 @@ public class ByteOperations {
 			}
 
 			int v = array[offset + i] & 0x00FF;
-			System.out.println(v);
+//			System.out.println(v);
 			hexString.append(HEX_CHARS[v >>> 4]);
 			// System.out.println(HEX_CHARS[v >>> 4]);
 			hexString.append(HEX_CHARS[v & 0x0F]);

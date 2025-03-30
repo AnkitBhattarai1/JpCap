@@ -1,8 +1,5 @@
 package org.jpcap.example;
 
-import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
-
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_compile;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_datalink;
 import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_freealldevs;
@@ -12,6 +9,9 @@ import static org.jpcap.Core.Native.NativeWpcapMapping.pcap_setfilter;
 import java.net.Inet4Address;
 import java.util.List;
 
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+
 import org.jpcap.Core.JpCap;
 import org.jpcap.Core.Enums.LinkLayerType;
 import org.jpcap.Core.Interfaces.JpCapNetworkInterface;
@@ -19,26 +19,18 @@ import org.jpcap.Core.Native.NativeHeaders.ip_header;
 import org.jpcap.Core.Native.NativeWpcapMapping.bpf_program;
 import org.jpcap.Core.Native.NativeWpcapMapping.pcap_handler;
 import org.jpcap.Core.Native.NativeWpcapMapping.pcap_pkthdr;
-import org.jpcap.Core.Packets.Network.IpV4Packet;
+import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
+import org.jpcap.Core.Packets.Link.EthernetPacket;
 import org.jpcap.Core.Utils.InetConverter;
 
 public class Main {
     public static void main(String[] args) {
 
         List<JpCapNetworkInterface> interfaces = JpCap.findAllDevs();
-        // Pointer p = JpCap.openInteface("ankit");
 
-        System.out.println("Listening");
+        System.out.println(interfaces);
 
-        // File f = new File("C:/Users/Ankit/Desktop/" + System.currentTimeMillis() +
-        // ".txt");
-        // try {
-        // f.createNewFile();
-        // } catch (Exception e) {
-        // // TODO: handle exception
-        // }
-
-        Pointer p = JpCap.openInterface(interfaces.get(3).name);
+        Pointer p = JpCap.openInterface(interfaces.get(0).name);
 
         if (pcap_datalink(p) != LinkLayerType.DLT_EN10MB.getCode()) {
             System.out.println("Not an ethernet interface");
@@ -48,8 +40,8 @@ public class Main {
 
         NativeLong netmask;
 
-        if (interfaces.get(3).addresses != null) {
-            Inet4Address address = (Inet4Address) interfaces.get(3).addresses.get(0).getSubNetMask();
+        if (interfaces.get(0).addresses != null) {
+            Inet4Address address = (Inet4Address) interfaces.get(0).addresses.get(0).getSubNetMask();
             netmask = InetConverter.toIn_addr(address).S_addr;
 
         } else {
@@ -57,7 +49,7 @@ public class Main {
         }
 
         bpf_program fcode = new bpf_program();
-        String packetFilter = "ip and udp";
+        String packetFilter = "ip and tcp";
 
         if (pcap_compile(p, fcode, packetFilter, 1, netmask.intValue()) < 0) {
             System.out.println("Error in compiling filter");
@@ -80,37 +72,25 @@ public class Main {
             // System.out.println(ip_head er.getByte(0));
 
             ip_header h = new ip_header(ip);
+            ip_header h2 = new ip_header(pkt.share(6));
 
             byte[] data = ip.getByteArray(0, 200);
 
             System.out.println(InetConverter.toInet4Address(h.src_ip).getHostAddress() +
                     " -> "
-                    + InetConverter.toInet4Address(h.dst_ip).getHostAddress());
+                    + InetConverter.toInet4Address(h2.dst_ip).getHostAddress());
 
-            // System.out.println(Arrays.toString(data));
+
+            byte[] rawData = pkt.getByteArray(0, hdr.caplen);
+            //EthernetPacket e = EthernetPacket.Builder(rawData,0,rawData.length).build();
+            EthernetPacket e = new EthernetPacket(rawData, 0, hdr.len);
+            System.out.println(e.getHeader());
+            System.out.println(((L3Packet)e.getPlayLoad()).getHeader().getSourceAddress());
+            System.out.println(((L3Packet)e.getPlayLoad()).getHeader().getDestinationAddress());
         };
 
         pcap_loop(p, 0, onCapture, null);
-        IpV4Packet ip = new IpV4Packet();
-        // DnsDomainName google = DnsDomainName.Builder().labels(List.of("www",
-        // "google", "com")).build();
-        // DnsResourceRecordType a = DnsResourceRecordType.A;
-        // DnsClass In = DnsClass.IN;
-        // DnsQuestion q =
-        // DnsQuestion.Builder().questionName(google).questionClass(In).questionType(a).build();
-        // byte[] rawData = q.getRawData();
 
-        // DnsQuestion q2 = DnsQuestion.Builder(rawData, 0, rawData.length).build();
-
-        // System.out.println(q);
-        // System.out.println(q2);
-
-        // var address = DnsRDataA.Builder(new byte[] { (byte) 192, (byte) 168, 1, 1
-        // }).build();
-
-        // System.out.println(address);
-        // byte[] addressbyte = address.getRawData();
-        // System.out.println(Arrays.toString(addressbyte));
 
     }
 }

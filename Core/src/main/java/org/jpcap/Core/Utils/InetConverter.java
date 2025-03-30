@@ -5,10 +5,10 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.nio.ByteOrder;
 
+import com.sun.jna.NativeLong;
+
 import org.jpcap.Core.Native.NativeWpcapMapping.in6_addr;
 import org.jpcap.Core.Native.NativeWpcapMapping.in_addr;
-
-import com.sun.jna.NativeLong;
 
 /**
  * An utility class for converting the Network addresses
@@ -73,11 +73,14 @@ public class InetConverter {
 	public static Inet4Address toInet4Address(byte[] rawData, int offset, ByteOrder bo) {
 		ByteOperations.validate(rawData, offset, Byte.BYTES * 4);
 
+        byte [] addr = new byte[(Byte.BYTES)*4];
+        System.arraycopy(rawData, offset, addr, 0, Byte.BYTES*4);
+        
 		try {
-			if (bo == ByteOrder.LITTLE_ENDIAN)
-				return (Inet4Address) InetAddress.getByAddress(ByteOperations.reverse(rawData));
+			if (bo == ByteOrder.BIG_ENDIAN)
+				return (Inet4Address) InetAddress.getByAddress(ByteOperations.reverse(addr));
 			else
-				return (Inet4Address) Inet4Address.getByAddress(rawData);
+				return (Inet4Address) Inet4Address.getByAddress(addr);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new AssertionError(e);

@@ -7,6 +7,12 @@ import java.util.function.BiPredicate;
 import org.jpcap.Core.Native.NativeWpcapMapping.pcap_addr;
 import org.jpcap.Core.Native.NativeWpcapMapping.soc_addr;
 
+
+
+/**
+ *@author "Ankit Bhattarai"
+ */
+
 public abstract class JpCapAbstractAddress implements JpCapAddress {
 
 	private final InetAddress address;
@@ -42,12 +48,16 @@ public abstract class JpCapAbstractAddress implements JpCapAddress {
 	 * @return true if the network address is valid based on the specified criteria,
 	 *         false otherwise.
 	 */
-	BiPredicate<soc_addr.ByReference, Short> isValid = (address, family) -> {
+
+   
+    BiPredicate<soc_addr.ByReference, Short> isValid = (address, family) -> {
 		// if(address.getFamily()!=family){
 		// //warn();
 		// }
 		return (address != null && address.getFamily() != Inets.AF_UNSPEC && address.getFamily() == family);
 	};
+
+
 
 	/**
 	 * Converts a valid network address into an InetAddress.

@@ -1,5 +1,6 @@
 package org.jpcap.Core.Packets.Network.IpV4Options;
 
+
 import org.jpcap.Core.Constants.NamedCodes.L3.IpV4OptionType;
 import org.jpcap.Core.Packets.Network.IpV4Option;
 
@@ -22,6 +23,7 @@ import org.jpcap.Core.Packets.Network.IpV4Option;
         any other reason.
  *</pre>
  */
+
 public class EndOfOptions  extends IpV4Option{
 
     private static final EndOfOptions INSTANCE = new EndOfOptions();

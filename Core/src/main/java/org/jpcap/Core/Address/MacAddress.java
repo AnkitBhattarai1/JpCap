@@ -17,7 +17,6 @@ public class MacAddress extends LinkLayerAddress {
 
     private MacAddress(byte[] address) {
         super(address);
-        // TODO Auto-generated constructor stub
     }
 
     public static MacAddress getByAddress(byte[] address, int offset) {
@@ -48,7 +47,6 @@ public class MacAddress extends LinkLayerAddress {
 
     public MacAddress(String address, String separator) {
         super(address, separator);
-        // TODO Auto-generated constructor stub
     }
 
     /** @return OUI */

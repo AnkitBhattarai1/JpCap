@@ -76,5 +76,23 @@ public abstract class RouteOption extends IpV4Option{
     return rawData;
   }
 
+  public byte getPointer(){
+    return this.pointer;
+  }
+
+  @Override 
+  public String toString(){
+    StringBuilder sb = new StringBuilder();
+    sb.append("[option-type: ").append(getType());
+    sb.append("] [option-length: ").append(getLength() & 0xFF);
+    sb.append(" bytes] [pointer: ").append(getPointer() & 0xFF);
+    sb.append("] [route data:");
+
+    for (Inet4Address addr : routeData) {
+      sb.append(" ").append(addr);
+    }
+    sb.append("]");
+    return sb.toString();
+  }
 
 }

@@ -7,6 +7,7 @@
           <groupId>org.jpcap</groupId>
           <artifactId>jpcap</artifactId>
           <version>1.0-SNAPSHOT</version>
+           <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.jpcap</groupId>
@@ -19,6 +20,7 @@
             <artifactId>Core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        
         </dependencies>
 
         <build>
@@ -28,7 +30,7 @@
         <artifactId>
         exec-maven-plugin
         </artifactId>
-        <version>3.0.0</version> 
+        <version>3.1.0</version> 
         <executions>
         <execution>
         <goals>
@@ -38,6 +40,11 @@
         </executions>
         <configuration>
         <mainClass> org.jpcap.example.Main </mainClass> 
+         <jvmArgs>
+                    <jvmArg>-XX:+ShowCodeDetailsInExceptionMessages</jvmArg>
+                </jvmArgs>
+                <!-- Use runtime classpath -->
+                <classpathScope>runtime</classpathScope>
         </configuration>
         </plugin>
         </plugins>

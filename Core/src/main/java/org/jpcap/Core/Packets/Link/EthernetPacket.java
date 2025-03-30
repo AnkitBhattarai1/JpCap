@@ -8,7 +8,7 @@ import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet;
 import org.jpcap.Core.Packets.Abstract_Layer_Packet.L3Packet.L3PacketBuilder;
 import org.jpcap.Core.Utils.ByteOperations;
 
-/**
+/*
  * This class represents an Ethernet packet.
  * <pre>
  * +-------------------------+
@@ -24,29 +24,46 @@ import org.jpcap.Core.Utils.ByteOperations;
  * +-------------------------+
  * </pre>
  */
+
 public class EthernetPacket
-        implements L2Packet {
+    implements L2Packet {
 
     EthernetHeader header;
     Packet playload;
-    private final byte[] pad;
+    private byte[] pad;
+
+    private byte[] rawPayload;
 
     /**
      * Private constructor for EthernetPacket.
      *
      * @param builder the builder used to create the EthernetPacket
      */
+
     private EthernetPacket(EthernetPacketBuilder builder) {
+        
         this.header = builder.ethHeader;
         this.playload = builder.payload;
         this.pad = builder.pad;
+    
     }
+
+
+    public EthernetPacket(byte[] rawData, int offset, int len){
+
+        this.rawPayload = new byte[len];
+        System.arraycopy(rawData, offset, rawPayload, 0, len);
+        
+    }
+
+
 
     /**
      * Returns the length of the Ethernet packet.
      *
      * @return the length of the Ethernet packet
      */
+
     @Override
     public int length() {
         int len = 0;
@@ -65,19 +82,34 @@ public class EthernetPacket
      *
      * @return the raw data of the Ethernet packet
      */
+   
     @Override
     public byte[] getRawData() {
-        byte[] rawDAta = new byte[length()];
 
-        byte[] hraw = header.getRawData();// rawData of the headerrrr...
-        System.arraycopy(hraw, 0, rawDAta, 0, hraw.length);
 
-        byte[] plraw = playload.getRawData();
-        System.arraycopy(plraw, 0, rawDAta, hraw.length, plraw.length);
-
-        System.arraycopy(pad, 0, rawDAta, plraw.length + hraw.length, pad.length);
-
-        return rawDAta;
+  if (rawPayload != null) {
+        return rawPayload; // Return rawPayload if constructed from raw data
+    }
+    
+    byte[] rawData = new byte[length()];
+    int position = 0;
+    
+    // Copy header
+    byte[] headerRaw = header.getRawData();
+    System.arraycopy(headerRaw, 0, rawData, position, headerRaw.length);
+    position += headerRaw.length;
+    
+    // Copy payload
+    if (playload != null) {
+        byte[] payloadRaw = playload.getRawData();
+        System.arraycopy(payloadRaw, 0, rawData, position, payloadRaw.length);
+        position += payloadRaw.length;
+    }
+    
+    // Copy padding
+    System.arraycopy(pad, 0, rawData, position, pad.length);
+    
+    return rawData;
     }
 
     /**
@@ -87,6 +119,14 @@ public class EthernetPacket
      */
     @Override
     public L2Header getHeader() {
+        
+        if(header!=null)
+        return header;
+
+        if(header==null && rawPayload!=null)
+            this.header=
+         EthernetHeader.Builder(rawPayload,0,rawPayload.length).build();
+   
         return header;
     }
 
@@ -95,8 +135,75 @@ public class EthernetPacket
      *
      * @return the payload of the Ethernet packet
      */
+
     @Override
     public Packet getPlayLoad() {
+        
+        if(playload!=null)
+        return playload;
+
+        if(header==null)
+        this.header = EthernetHeader.Builder(rawPayload,0,rawPayload.length).build();//making sure that the header is initialized....
+
+        if(rawPayload!=null){
+            if (header.getEtherType().getValue() <= EtherType.IEEE802_3_MAX_LENGTH) {
+
+                int payloadLength = header.etherType.getValue();
+                int padLength = rawPayload.length- header.length() - payloadLength;
+                int payloadoffset = header.length();
+
+                if (padLength < 0)
+                    throw new IllegalArgumentException(
+                            "The value of the ether type (length) field seems to be wrong: "
+                                    + header.getEtherType().getValue());
+
+                if (payloadLength > 0) {
+                    Class<? extends L3Packet> clazz = header.getEtherType().getPacketClass();
+                    System.out.println(clazz.getName());
+
+                    try {
+                        
+                       L3Packet b = (L3Packet) clazz
+                                        .getDeclaredConstructor(byte[].class,int.class,int.class)
+                                        .newInstance(rawPayload,payloadoffset,rawPayload.length);
+
+                       this.playload=b;
+                           
+                    } catch (Exception e) {
+                        //this.payload = null;
+                        e.printStackTrace();
+                    }
+                } else
+
+                this.playload=null;
+            }
+
+            else {
+                int payloadAndPadLength = rawPayload.length- header.length();
+                int payLoadOffset = header.length();
+
+                if (payloadAndPadLength > 0) {
+
+                    Class<? extends L3Packet> clazz = header.getEtherType().getPacketClass();
+
+                    System.out.println(clazz.getName());
+                    try {
+                        L3Packet b = (L3Packet) clazz
+                            .getDeclaredConstructor(byte[].class, int.class, int.class)
+                            .newInstance(rawPayload,payLoadOffset,rawPayload.length-payLoadOffset);
+                            
+                        this.playload=b;
+                    } catch (Exception e) {
+                        this.playload= null; 
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    this.playload= null;
+                    this.pad = new byte[0];
+                }
+            }
+        }
         return playload;
     }
 
@@ -173,10 +280,13 @@ public class EthernetPacket
                     Class<? extends L3Packet> clazz = ethHeader.getEtherType().getPacketClass();
 
                     try {
-                        L3PacketBuilder b = (L3PacketBuilder) clazz
-                                .getDeclaredMethod("Builder", byte[].class, int.class, int.class).invoke(null, rawData,
-                                        payloadoffset, payloadLength);
+                        
+                       L3PacketBuilder b = (L3PacketBuilder) clazz
+                                .getDeclaredMethod("Builder", byte[].class, int.class, int.class)
+                                .invoke(null, rawData, payloadoffset, payloadLength);
+
                         this.payload = b.build();
+                           
                     } catch (Exception e) {
                         this.payload = null;
                         e.printStackTrace();
@@ -248,6 +358,7 @@ public class EthernetPacket
         }
 
         public EthernetPacketBuilder payload(L3Packet payload) {
+            
             if (sealed)
                 throw new UnsupportedOperationException();
             // Here we need to check if the supplied playload is of the same type as the
@@ -269,6 +380,7 @@ public class EthernetPacket
         }
 
         private void validate() {
+
             if (ethHeader == null) {
                 throw new IllegalStateException("Ethernet header cannot be null");
             }
@@ -316,11 +428,13 @@ public class EthernetPacket
 
     public static class EthernetHeader implements L2Header {
 
-        MacAddress dstAddress;/* destination Mac-Address of the packet */
-        MacAddress srcAddress;/*source Mac-Address of the packet */
-        EtherType etherType;
+        private MacAddress dstAddress;/* destination Mac-Address of the packet */
+        private MacAddress srcAddress;/*source Mac-Address of the packet */
+        private EtherType etherType;/* Represents the ether type in the ethernet frame*/
+
 
         private EthernetHeader(EthernetHeaderBuilder builder) {
+        
             this.dstAddress = builder.dstAddress;
             this.srcAddress = builder.srcAddress;
             this.etherType = builder.etherType;
@@ -373,6 +487,22 @@ public class EthernetPacket
             return rawData;
         }
 
+        @Override
+        public String toString() {
+    
+            StringBuilder sb = new StringBuilder();
+    
+         sb.append("Ethernet Header { \n");
+         sb.append("  Destination MAC: ").append(dstAddress).append("\n"); 
+         sb.append("  Source MAC: ").append(srcAddress).append("\n"); 
+        sb.append("  EtherType: ").append(etherType).append("\n");
+        sb.append("  Header Length: ").append(length()).append(" bytes\n"); 
+        sb.append("}\n");
+
+            return sb.toString();
+            }
+
+
         public static final class EthernetHeaderBuilder implements HeaderBuilder{
 
             MacAddress dstAddress;
@@ -396,6 +526,7 @@ public class EthernetPacket
             }
 
             public EthernetHeaderBuilder dstAddress(MacAddress dstAddress) {
+                
                 if (sealed)
                     throw new UnsupportedOperationException(
                             "Cannot re initialize the dst addr once it is initialized by using the rawData");
@@ -405,16 +536,18 @@ public class EthernetPacket
                 return this;
             }
 
-            public EthernetHeaderBuilder srcAddress(MacAddress dstAddress) {
+            public EthernetHeaderBuilder srcAddress(MacAddress srcAddress) {
+               
                 if (sealed)
                     throw new UnsupportedOperationException(
                             "Cannot re initialize the src addr once it is initialized by using the rawData");
 
-                this.dstAddress = dstAddress;
+                this.srcAddress = srcAddress;
                 return this;
             }
 
             public EthernetHeaderBuilder etherType(EtherType etherType) {
+               
                 if (sealed)
                     throw new UnsupportedOperationException(
                             "Cannot re initialize the etherType once it is initialized by using the rawData");
@@ -422,12 +555,15 @@ public class EthernetPacket
                 this.etherType = etherType;
                 return this;
             }
+
             @Override
             public EthernetHeader build() {
+            
                 return new EthernetHeader(this);
             }
 
             private void validate() {
+               
                 if (srcAddress == null || dstAddress == null || etherType == null)
                     throw new IllegalArgumentException((srcAddress == null ? "srcAddress" : "dstAddress") + " or "
                             + (etherType == null ? "etherType" : "etherType") + " is null");

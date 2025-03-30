@@ -54,7 +54,6 @@ public class NativeWpcapMapping {
 	//to_ms is the read timeout in milliseconds
 	//auth is the authentication to open the device in
 	//errbuf is the error buffer
-
 	public static native Pointer pcap_open_live(String device, int snaplen, int promisc, int to_ms, PcapErrbuf errbuf);
 
 	// linktype is the link layer type of the device

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jpcap.Core.Constants.NamedCodes.NamedCode;
-import org.jpcap.Core.Constants.NamedCodes.DnsCodes.DnsClass;
 
 /**
  * In the Internet Protocol version 4 (IPv4) [RFC791] there is a field

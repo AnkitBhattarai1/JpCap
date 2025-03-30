@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
+
 import org.jpcap.Core.Interfaces.JpCapNetworkInterface;
 import org.jpcap.Core.Native.NativeWpcapMapping.PcapErrbuf;
 import org.jpcap.Core.Native.NativeWpcapMapping.pcap_handler;
 import org.jpcap.Core.Native.NativeWpcapMapping.pcap_if;
-
-import com.sun.jna.Pointer;
-import com.sun.jna.ptr.PointerByReference;
 
 public class JpCap {
 

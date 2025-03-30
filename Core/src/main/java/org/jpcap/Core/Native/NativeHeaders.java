@@ -16,7 +16,7 @@ public class NativeHeaders {
         public short len; // total length
         public short id; // identification
         public short flags_offset;// flags and fragment offset
-        public short ttl; // time to live
+        public byte ttl; // time to live
         public byte proto; // protocol
         public short checksum; // checksum
         public in_addr src_ip; // source address
